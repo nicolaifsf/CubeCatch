@@ -18,14 +18,29 @@
 		camera.position.z = 1000;
 		scene.add(camera);
 
-		geometry = new THREE.BoxGeometry(300,300,300);
-		material = new THREE.MeshLambertMaterial({color: 0x0000FF});
-		cube = new THREE.Mesh(geometry, material);
+		//cube colors
+		var materials = [
+		    new THREE.MeshLambertMaterial({
+		        color:0xffff00 }),
+		    new THREE.MeshLambertMaterial({
+		        color:0xff0000 }),
+		    new THREE.MeshLambertMaterial({
+		        color:0x00ff00 }),
+		    new THREE.MeshLambertMaterial({
+		        color:0x00ffff }),
+		    new THREE.MeshLambertMaterial({
+		        color:0x000000 }),
+		    new THREE.MeshLambertMaterial( {
+		        color:0xfff000 }),
+		];
+		 
+		var geometry = new THREE.BoxGeometry(300,300,300, 3, 3, 3),
+		    cube     = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial(materials) );
+
 		cube.rotation.x = -530;
 		cube.rotation.y=150;
-		// cube.rotation.z=50;
-
 		scene.add(cube);
+
 
 		renderer = new THREE.WebGLRenderer();
 		renderer.setSize(window.innerWidth, window.innerHeight);
