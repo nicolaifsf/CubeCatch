@@ -1,7 +1,7 @@
 <!Doctype HTML>
 <html>
 <head>
-<title> Cube Catch </title>
+<title> Cube Catch D3</title>
 <style>body{margin:0; padding:0;}</style>
 <script type = "text/javascript" src = "three.min.js"></script>
   <script src="OrbitControls.js"></script>
@@ -147,10 +147,8 @@
 			rotateAroundWorldAxis(cube, y_axis, PI/2);
 			toMove = "";
 		}
-		if(numBalls <=6){
-			placeBallInRandomLocation();
-			// ATTACK();
-		}
+
+		placeBallInRandomLocation();
 
 		// index = placeBallInRandomLocation();
 		for(var index = 0; index < whenTheBallsAttack.length; ++index){
@@ -176,6 +174,8 @@
 			}	
 		}
 
+		determineColl();
+
 		// whenTheBallsAttack[0].translateZ(30);
 
 		// var currBall = whenTheBallsAttack.shift();
@@ -197,6 +197,9 @@
 	var backLeft = false;
 
 	function placeBallInRandomLocation(){
+		if(numBalls == 6){
+			return;
+		}
 		b = ball();
 		var loc = Math.random() * 6;
 		//var loc = 0;
@@ -250,7 +253,7 @@
 
 		whenTheBallsAttack.push(b);
 		scene.add(b);
-		return loc;
+		// return loc;
 		// console.log(loc);
 	}
 
@@ -276,6 +279,21 @@
 		return sphere;
 	}
 
+	function determineColl(){
+        var originPoint = cube.position.clone();
+        for(var vertexIndex = 0; vertexIndex < cube.geometry.vertices.length; ++vertexIndex){
+            var localVertex = cube.geometry.vertices[vertexIndex].clone();
+            var globalVertex = localVertex.applyMatrix4(cube.matrix);
+            var directionVector = globalVertex.sub(cube.position);
+
+            var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
+            var collisionResults = ray.intersectObjects(whenTheBallsAttack);
+            if(collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()){
+                // console.log('hit'); 
+            }
+        }
+
+	}
 
 
 
