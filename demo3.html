@@ -121,6 +121,8 @@
 	function animate(){
 		// ball();
 		requestAnimationFrame(animate);
+	
+
 		if (toMove == "left"){
 			rotateAroundWorldAxis(cube, y_axis, -PI/2); 
 			toMove = "";
@@ -149,6 +151,31 @@
 			placeBallInRandomLocation();
 			// ATTACK();
 		}
+
+		index = placeBallInRandomLocation();
+
+		if (whenTheBallsAttack[index].position.x >0){
+			whenTheBallsAttack[index].translateX(-10);
+		}
+		if (whenTheBallsAttack[index].position.x< 0){
+			whenTheBallsAttack[index].translateX(10);
+		}
+
+		if (whenTheBallsAttack[index].position.y >0){
+			whenTheBallsAttack[index].translateY(-10);
+		}
+		if (whenTheBallsAttack[index].position.y< 0){
+			whenTheBallsAttack[index].translateY(10);
+		}						
+
+		if (whenTheBallsAttack[index].position.z >0){
+			whenTheBallsAttack[index].translateZ(-10);
+		}
+		if (whenTheBallsAttack[index].position.z< 0){
+			whenTheBallsAttack[index].translateZ(10);
+		}	
+
+
 		// whenTheBallsAttack[0].translateZ(30);
 
 		// var currBall = whenTheBallsAttack.shift();
@@ -172,8 +199,9 @@
 	function placeBallInRandomLocation(){
 		b = ball();
 		var loc = Math.random() * 6;
+		//var loc = 0;
 		if(loc < 1 && !onTop){
-			// console.log(0);
+			console.log(0);
 			// ballHash['posY'] = 1;
 			onTop = true;
 			b.position.y = cube.position.y +500;
@@ -222,6 +250,7 @@
 
 		whenTheBallsAttack.push(b);
 		scene.add(b);
+		return loc;
 		// console.log(loc);
 	}
 
