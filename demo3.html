@@ -1,0 +1,160 @@
+<!Doctype HTML>
+<html>
+<head>
+<title> Cube Catch </title>
+<style>body{margin:0; padding:0;}</style>
+<script type = "text/javascript" src = "three.min.js"></script>
+  <script src="OrbitControls.js"></script>
+<script>
+	var camera, scene, renderer;
+	var geometry, material, cube;
+
+	var PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164;
+
+	var toMove = "";
+
+	var x_axis = new THREE.Vector3(1,0,0);
+	var y_axis = new THREE.Vector3(0,1,0);
+	var z_axis = new THREE.Vector3(0,0,1);
+
+	var yellow_side = new THREE.MeshLambertMaterial({color:0xdddd00});
+	var gray_side = new THREE.MeshLambertMaterial({color:0xdddddd});
+	var blue_side = new THREE.MeshLambertMaterial({color:0x00bbee});
+	var green_side = new THREE.MeshLambertMaterial({color:0x00ff00});
+	var red_side = new THREE.MeshLambertMaterial({color:0xee0000});
+	var orange_side = new THREE.MeshLambertMaterial({color:0xff7700});
+
+	function init(){
+		scene = new THREE.Scene();
+		
+		camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight,1, 10000);
+		camera.position.x = 1200;
+		camera.position.y = 800;
+		camera.position.z = 1200;
+		camera.rotation.x = 0;
+		camera.rotation.y = PI/4;
+		camera.rotation.z = 0;
+		scene.add(camera);
+
+		geometry = new THREE.BoxGeometry(300,300,300);
+		// material = new THREE.MeshLambertMaterial({color:0x0000FF});
+		var materials = [yellow_side, gray_side, blue_side, green_side, red_side, orange_side];
+		cube = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+		cube.rotation.x = 0;
+		cube.rotation.y = 0;
+		cube.position.x = 0;
+		cube.position.y = 0;
+		cube.position.z = 0;
+
+		scene.add(cube);
+		// ball();
+		ball = ball();
+		// var b2 = ball();
+		// b2 = ball();
+		ball.position.x = cube.position.x +500;
+		// ball.position.y = cube.position.y +500;
+		// b2.position.y = cube.position.y +100;
+		// scene.add(b2);
+
+		scene.add(ball);
+
+
+
+
+		renderer = new THREE.WebGLRenderer();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.setClearColor(0xeeeedd, 1.0);
+
+		var pointLightForward = new THREE.PointLight(0xffffff, 1.07);
+		var pointLightRight = new THREE.PointLight(0xffffff, 0.45);
+		var pointLightLeft = new THREE.PointLight(0xffffff, 0.45);
+		var pointLightTop = new THREE.PointLight(0xffffff, 0.75);
+		pointLightForward.position.x = 1200;
+		pointLightForward.position.y = 1200;
+		pointLightForward.position.z = 1200;
+		pointLightRight.position.x = 2000;
+		pointLightLeft.position.z = 2000;
+		pointLightTop.position.y = 2000;
+		scene.add(pointLightForward);
+		scene.add(pointLightRight);
+		scene.add(pointLightLeft);
+		scene.add(pointLightTop);
+
+		document.body.appendChild(renderer.domElement);
+
+		// Add OrbitControls so that we can pan around with the mouse.
+		controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+		animate();
+	}
+
+	function keyDown(e){
+		var keyCode = e.keyCode;
+		if (keyCode == 65 || keyCode == 74){ toMove = "left"; }
+		if (keyCode == 87 || keyCode == 73){ toMove = "lup"; }
+		if (keyCode == 83 || keyCode == 75){ toMove = "ldown"; }
+		if (keyCode == 69 || keyCode == 79){ toMove = "rup"; }
+		if (keyCode == 68 || keyCode == 76){ toMove = "rdown"; }
+		if (keyCode == 70 || keyCode == 59){ toMove = "right"; }
+	}
+
+	function rotateAroundWorldAxis(obj, axis, rads){
+		var q = new THREE.Quaternion();
+		q.setFromAxisAngle(axis, rads);
+		obj.quaternion.multiplyQuaternions(q, obj.quaternion);
+	}
+
+	function animate(){
+		requestAnimationFrame(animate);
+		if (toMove == "left"){
+			rotateAroundWorldAxis(cube, y_axis, -PI/2); 
+			toMove = "";
+		}
+		else if (toMove == "lup"){
+			rotateAroundWorldAxis(cube, x_axis, -PI/2);
+			toMove = "";
+		}
+		else if (toMove == "ldown"){
+			rotateAroundWorldAxis(cube, x_axis, PI/2);
+			toMove = "";
+		}
+		else if (toMove == "rup"){
+			rotateAroundWorldAxis(cube, z_axis, PI/2);
+			toMove = "";
+		}
+		else if (toMove == "rdown"){
+			rotateAroundWorldAxis(cube, z_axis, -PI/2);
+			toMove = "";
+		}
+		else if (toMove == "right"){
+			rotateAroundWorldAxis(cube, y_axis, PI/2);
+			toMove = "";
+		}
+		renderer.render(scene, camera);
+		controls.update();
+	}
+	function ball(){
+		var geometry, material, sphere;
+		geometry = new THREE.SphereGeometry( 60, 32, 32 );
+		material = new THREE.MeshLambertMaterial( {color: 0xffa500} );
+		sphere = new THREE.Mesh( geometry, material );
+		// sphere.position.x = window.innerWidth;
+		// sphere.position.y = window.innerHeight;
+		// sphere.position.z = 1000;
+		// scene.add(sphere);
+		return sphere;
+	}
+
+
+	var toMove;
+
+	document.addEventListener("keyup", keyDown, false);
+
+
+
+
+</script>
+</head>
+<body onload = "init()">
+</body>
+</html>
