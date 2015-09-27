@@ -1,1 +1,116 @@
-Hello World
+<!Doctype HTML>
+<html>
+<head>
+<title> Cube Catch </title>
+<style>body{margin:0; padding:0;}</style>
+<script type = "text/javascript" src = "three.min.js"></script>
+  <script src="OrbitControls.js"></script>
+<script>
+	var camera, scene, renderer;
+	var geometry, material, cube;
+
+	var PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164;
+
+
+	function init(){
+		scene = new THREE.Scene();
+		
+		camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight,1, 10000);
+		camera.position.z = 1000;
+		scene.add(camera);
+
+		geometry = new THREE.BoxGeometry(300,300,300);
+		// material = new THREE.MeshLambertMaterial({color:0x0000FF});
+		var materials = [
+		    new THREE.MeshLambertMaterial({color:0xff7700}),
+		    new THREE.MeshLambertMaterial({color:0xee0000}),
+		    new THREE.MeshLambertMaterial({color:0x00ff00}),
+		    new THREE.MeshLambertMaterial({color:0x00bbee}),
+		    new THREE.MeshLambertMaterial({color:0xcccccc}),
+		    new THREE.MeshLambertMaterial({color:0xdddd00}),
+		];
+		cube = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+		cube.rotation.x = 7 * PI / 6;
+		cube.rotation.y = 5 * PI / 4;
+
+		scene.add(cube);
+
+		renderer = new THREE.WebGLRenderer();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.setClearColor(0xeeeedd, 1.0);
+
+		var pointLightForward = new THREE.PointLight(0xffffff, 1.07);
+		var pointLightRight = new THREE.PointLight(0xffffff, 0.24);
+		var pointLightLeft = new THREE.PointLight(0xffffff, 0.24);
+		var pointLightTop = new THREE.PointLight(0xffffff, 0.75);
+		pointLightForward.position.y = -600;
+		pointLightForward.position.z = 4500;
+		pointLightRight.position.x = 3000;
+		pointLightLeft.position.x = -3000;
+		pointLightTop.position.y = 3000;
+		scene.add(pointLightForward);
+		scene.add(pointLightRight);
+		scene.add(pointLightLeft);
+		scene.add(pointLightTop);
+
+
+		document.body.appendChild(renderer.domElement);
+
+		 // Add OrbitControls so that we can pan around with the mouse.
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+		animate();
+	}
+
+	var toMove;
+
+    function keyDown(e){
+        var keyCode = e.keyCode;
+        if(keyCode == 65){
+        	// console.log('here');
+            toMove = 'a';
+        }
+        if(keyCode == 87){
+        	toMove = 'w';
+        }
+        if(keyCode == 68){
+        	toMove = 'd';
+        }
+        if(keyCode == 83){
+        	toMove = 's';
+        }
+    }
+	function animate(){
+		requestAnimationFrame(animate);
+		// console.log('test');
+        if(toMove == 'a'){
+            cube.rotateY(45);
+            console.log('yay'); 
+            toMove = '0';
+        }
+        else if(toMove == 'w'){
+        	cube.rotateX(10);
+        	toMove = '0';
+        }
+        else if(toMove == 'd'){
+        	cube.rotateY(-45);
+        	toMove = '0';
+        }
+        else if(toMove == 's'){
+        	cube.rotateX(45);
+        	toMove = '0';
+        }
+		renderer.render(scene,camera);
+		controls.update();
+	}
+
+    document.addEventListener("keyup", keyDown, false);
+
+
+
+
+</script>
+</head>
+<body onload = "init()">
+</body>
+</html>
