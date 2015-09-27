@@ -43,6 +43,13 @@
 
 		scene.add(cube);
 
+		ball = ball();
+
+		scene.add(ball);
+
+
+
+
 		renderer = new THREE.WebGLRenderer();
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.setClearColor(0xeeeedd, 1.0);
@@ -70,6 +77,7 @@
 		animate();
 	}
 
+<<<<<<< HEAD
 	function keyDown(e){
 		var keyCode = e.keyCode;
 		if (keyCode == 65 || keyCode == 74){ toMove = "left"; }
@@ -112,6 +120,63 @@
 			rotateAroundWorldAxis(cube, y_axis, PI/2);
 			toMove = "";
 		}
+=======
+	function ball(){
+		var geometry, material, sphere;
+		geometry = new THREE.SphereGeometry( 100, 32, 32 );
+		material = new THREE.MeshLambertMaterial( {color: 0xffa500} );
+		sphere = new THREE.Mesh( geometry, material );
+		sphere.position.x = window.innerWidth;
+		sphere.position.y = window.innerHeight;
+		// sphere.position.z = 1000;
+		scene.add(sphere);
+		return sphere;
+	}
+
+
+	var toMove;
+
+    function keyDown(e){
+        var keyCode = e.keyCode;
+        if(keyCode == 65){
+        	// console.log('here');
+            toMove = 'a';
+        }
+        if(keyCode == 87){
+        	toMove = 'w';
+        }
+        if(keyCode == 68){
+        	toMove = 'd';
+        }
+        if(keyCode == 83){
+        	toMove = 's';
+        }
+    }
+	function animate(){
+		requestAnimationFrame(animate);
+				// cube.translateZ(1);
+		ball.translateX(-4);
+		ball.translateY(-2);
+
+		// console.log('test');
+        if(toMove == 'a'){
+            cube.rotateY(45);
+            console.log('yay'); 
+            toMove = '0';
+        }
+        else if(toMove == 'w'){
+        	cube.rotateX(10);
+        	toMove = '0';
+        }
+        else if(toMove == 'd'){
+        	cube.rotateY(-45);
+        	toMove = '0';
+        }
+        else if(toMove == 's'){
+        	cube.rotateX(45);
+        	toMove = '0';
+        }
+>>>>>>> 287a1c5a165cfc254fc536919f7a6b176466a672
 		renderer.render(scene,camera);
 		controls.update();
 	}
