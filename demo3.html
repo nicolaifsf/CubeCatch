@@ -9,7 +9,11 @@
 	var camera, scene, renderer;
 	var geometry, material, cube;
 
+	var numBalls = 0;
+	var ballHash = new Object();
 	var PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164;
+
+	var whenTheBallsAttack = [];
 
 	var toMove = "";
 
@@ -140,38 +144,68 @@
 			rotateAroundWorldAxis(cube, y_axis, PI/2);
 			toMove = "";
 		}
+		if(numBalls <=6){
+			placeBallInRandomLocation();
+			// ATTACK();
+		}
+		// whenTheBallsAttack[0].translateZ(30);
+
+		// var currBall = whenTheBallsAttack.shift();
+		// console.log(currBall);
+		// currBall.translateZ(5);
+		// ATTACK();
 		// placeBallInRandomLocation();
 		renderer.render(scene, camera);
 		controls.update();
-		placeBallInRandomLocation();
+		// ATTACK();
 	}
 	function placeBallInRandomLocation(){
 		b = ball();
-		var loc = Math.random() * 4;
+		var loc = Math.random() * 6;
 		if(loc < 1){
 			// console.log(0);
+			ballHash['posY'] = 1;
 			b.position.y = cube.position.y +500;
 		}
 		else if(loc < 2 && loc >=1){
 			// console.log(1);
-			b.position.x = cube.position.x +500;
+			ballHash['negY'] = 1;
+			b.position.y = cube.position.y -500;
 		}
 		else if(loc < 3 && loc >=2){
+			ballHash['posZ'] = 1;
 			// console.log(2);
 			b.position.z = cube.position.z + 500;
 		}
 		else if(loc < 4 && loc >=3){
 			// console.log(3);
+			ballHash['negZ'] = 1;
+			b.position.z = cube.position.z -500;
+		}
+		else if(loc < 5 && loc >=4){
+			ballHash['posX'] = 1;
+			// console.log('hm');
+			b.position.x = cube.position.x +500;
+		}
+		else if(loc < 6 && loc >=5){
+			ballHash['negX'] = 1;
 			b.position.x = cube.position.x -500;
 		}
-		else{
-			// console.log('hm');
-		}
+		++numBalls;
 
-
-
+		whenTheBallsAttack.push(b);
 		scene.add(b);
 		// console.log(loc);
+	}
+
+	function ATTACK(){
+		var cB = whenTheBallsAttack.shift();
+		// console.log(x);
+		cB.translateZ(10);
+		// console.log('attacking');
+		// x.translateX(50);
+		// cB.position.x += 2;
+		return cB;
 	}
 
 	function ball(){
