@@ -31,6 +31,10 @@
 
 	scene = new THREE.Scene();
 
+	var materials = [
+		yellow_side, gray_side, blue_side, green_side, red_side, orange_side
+	];
+
 	function init(){
 		// scene = new THREE.Scene();
 		
@@ -41,9 +45,6 @@
 		scene.add(camera);
 
 		geometry = new THREE.BoxGeometry(300,300,300);
-		var materials = [
-			yellow_side, gray_side, blue_side, green_side, red_side, orange_side
-		];
 		cube = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
 		cube.rotation.x = 0;
 		cube.rotation.y = 0;
@@ -270,12 +271,35 @@
 	function ball(){
 	 	var geometry, material, sphere;
 		geometry = new THREE.SphereGeometry( 60, 32, 32 );
-		material = new THREE.MeshLambertMaterial( {color: 0xffa500} );
+
+		var index = Math.floor(Math.random()*5)+1
+
+		material = materials[index];
+
 		sphere = new THREE.Mesh( geometry, material );
 		// sphere.position.x = window.innerWidth;
 		// sphere.position.y = window.innerHeight;
 		// sphere.position.z = 1000;
 		// scene.add(sphere);
+		if (index = 0){
+			sphere.name = "yellow";
+		}
+		if (index = 1){
+			sphere.name = "gray";
+		}
+		if (index = 2){
+			sphere.name = "blue";
+		}
+		if (index = 3){
+			sphere.name = "green";
+		}
+		if (index = 4){
+			sphere.name = "red";
+		}
+		if (index = 5){
+			sphere.name = "orange";
+		}
+
 		return sphere;
 	}
 
