@@ -57,6 +57,7 @@
 		animate();
 	}
 
+
     function keyDown(e){
         var keyCode = e.keyCode;
         if(keyCode == 65){
@@ -74,11 +75,7 @@
     }
 	function animate(){
 		requestAnimationFrame(animate);
-        /*
-        listener.simple_combo("s", function() {
-            console.log("You pressed shift and s");
-        }); 
-        */
+
         if(toMove == 'a'){
             cube.rotateY(45);
             console.log('yay'); 
