@@ -2,10 +2,16 @@
 <html>
 <head>
 <title> Cube Catch D3</title>
+<style type = "text/css" src="main.css"></style>
 <style>body{margin:0; padding:0;}</style>
 <script type = "text/javascript" src = "three.min.js"></script>
   <script src="OrbitControls.js"></script>
 <script>
+
+	var score=0;
+
+	// document.getElementById("content").innerHTML="hello world";
+
 	var camera, scene, renderer;
 
 	var cubeFace, faceGeo;
@@ -359,6 +365,8 @@
 		renderer.render(scene, camera);
 		controls.update();
 		// ATTACK();
+		document.getElementById('squad').innerHTML = score;
+		// ++score;
 	}
 
 
@@ -390,7 +398,10 @@
 			// ballHash['posY'] = 1;
 			onTop = true;
 			b.position.y = daCube.position.y +500;
+			b.name = index;
+			console.log(b.name);
 				++numBalls;
+		scene.add(b);
 
 		}
 		else if(loc < 2 && loc >=1 && !onBot){
@@ -399,6 +410,7 @@
 			onBot = true;
 			b.position.y = daCube.position.y -500;
 				++numBalls;
+		scene.add(b);
 
 		}
 		else if(loc < 3 && loc >=2 && !froLeft){
@@ -406,6 +418,7 @@
 			// console.log(2);
 			froLeft = true;
 			b.position.z = daCube.position.z + 500;
+		scene.add(b);
 				++numBalls;
 
 		}
@@ -415,6 +428,7 @@
 			backRight = true;
 			b.position.z = daCube.position.z -500;
 				++numBalls;
+		scene.add(b);
 
 		}
 		else if(loc < 5 && loc >=4 && !froRight){
@@ -423,6 +437,7 @@
 			froRight = true;
 			b.position.x = daCube.position.x +500;
 				++numBalls;
+		scene.add(b);
 
 		}
 		else if(loc < 6 && loc >=5 && !backLeft){
@@ -430,11 +445,11 @@
 			backLeft = true;
 			b.position.x = daCube.position.x -500;
 				++numBalls;
+		scene.add(b);
 
 		}
 
 		whenTheBallsAttack.push(b);
-		scene.add(b);
 		// return loc;
 		// console.log(loc);
 	}
@@ -462,25 +477,25 @@
 		// sphere.position.y = window.innerHeight;
 		// sphere.position.z = 1000;
 		// scene.add(sphere);
-		// if (index == 0){
-		// 	sphere.name = "yellow";
-		// }
-		// else if (index == 1){
-		// 	sphere.name = "gray";
-		// }
-		// else if (index == 2){
-		// 	sphere.name = "blue";
-		// }
-		// else if (index == 3){
-		// 	sphere.name = "green";
-		// }
-		// else if (index == 4){
-		// 	sphere.name = "red";
-		// }
-		// else if (index == 5){
-		// 	sphere.name = "orange";
-		// }
-		// console.log(index);
+		if (index == 0){
+			sphere.name = "yellow";
+		}
+		else if (index == 1){
+			sphere.name = "gray";
+		}
+		else if (index == 2){
+			sphere.name = "blue";
+		}
+		else if (index == 3){
+			sphere.name = "green";
+		}
+		else if (index == 4){
+			sphere.name = "red";
+		}
+		else if (index == 5){
+			sphere.name = "orange";
+		}
+		console.log(index);
 
 		return sphere;
 	}
@@ -545,7 +560,9 @@
 
 </script>
 </head>
+
 <body onload = "init()">
+<div style="font-size: 32px;; text-color:white;width:100vw; height: 8vh; text-align:center; vertical-align:center; padding-top:10px;background-color:#EEEEDD;"id="squad">Testing</div>
 </body>
 </html>
 	
