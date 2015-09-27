@@ -45,6 +45,92 @@
 		yellow_side, gray_side, blue_side, green_side, red_side, orange_side
 	];
 
+	var RED = 0;
+	var YELLOW = 1;
+	var BLUE = 2;
+	var ORANGE = 3;
+	var GRAY = 4;
+	var GREEN = 5;
+	var cubeDirections = [[0,0,1],[1,0,0],[0,1,0]]
+
+	function getDirection(directions, color){
+		if (color == RED){ return directions[RED]; }
+		else if (color == YELLOW){ return directions[YELLOW]; }
+		else if (color == BLUE){ return directions[BLUE]; }
+		else if (color == ORANGE){ return [-1 * directions[RED][0], -1 * directions[RED][1], -1 * directions[RED][2]]; }
+		else if (color = GRAY){ return [-1 * directions[YELLOW][0], -1 * directions[YELLOW][1], -1 * direction[YELLOW][2]]; }
+		else if (color == GREEN){ return [-1 * directions[BLUE][0], -1 * directions[BLUE][1], -1 * directions[BLUE][2]]; }
+	}
+
+	function rotateDirections(directions, rotation){
+		if (rotation == "left"){
+			tmp = directions[RED][0];
+			directions[RED][0] = -1 * directions[RED][2];
+			directions[RED][2] = tmp;
+			tmp = directions[YELLOW][0];
+                        directions[YELLOW][0] = -1 * directions[YELLOW][2];
+                        directions[YELLOW][2] = tmp;
+			tmp = directions[BLUE][0];
+                        directions[BLUE][0] = -1 * directions[BLUE][2];
+                        directions[BLUE][2] = tmp;
+		}
+		else if (rotation == "right"){
+			tmp = directions[RED][2];
+                        directions[RED][2] = -1 * directions[RED][0];
+                        directions[RED][0] = tmp;
+                        tmp = directions[YELLOW][2];
+                        directions[YELLOW][2] = -1 * directions[YELLOW][0];
+                        directions[YELLOW][0] = tmp;
+                        tmp = directions[BLUE][2];
+                        directions[BLUE][2] = -1 * directions[BLUE][0];
+                        directions[BLUE][0] = tmp;
+		}
+		else if (rotation == "lup"){
+                        tmp = directions[RED][2];
+                        directions[RED][2] = -1 * directions[RED][1];
+                        directions[RED][1] = tmp;
+                        tmp = directions[YELLOW][2];
+                        directions[YELLOW][2] = -1 * directions[YELLOW][1];
+                        directions[YELLOW][1] = tmp;
+                        tmp = directions[BLUE][2];
+                        directions[BLUE][2] = -1 * directions[BLUE][1];
+                        directions[BLUE][1] = tmp;
+                }
+		else if (rotation == "ldown"){
+                        tmp = directions[RED][1];
+                        directions[RED][1] = -1 * directions[RED][2];
+                        directions[RED][2] = tmp;
+                        tmp = directions[YELLOW][1];
+                        directions[YELLOW][1] = -1 * directions[YELLOW][2];
+                        directions[YELLOW][2] = tmp;
+                        tmp = directions[BLUE][1];
+                        directions[BLUE][1] = -1 * directions[BLUE][2];
+                        directions[BLUE][2] = tmp;
+                }
+		else if (rotation == "rup"){
+                        tmp = directions[RED][0];
+                        directions[RED][0] = -1 * directions[RED][1];
+                        directions[RED][1] = tmp;
+                        tmp = directions[YELLOW][0];
+                        directions[YELLOW][0] = -1 * directions[YELLOW][1];
+                        directions[YELLOW][1] = tmp;
+                        tmp = directions[BLUE][0];
+                        directions[BLUE][0] = -1 * directions[BLUE][1];
+                        directions[BLUE][1] = tmp;
+                }
+		else if (rotation == "rdown"){
+                        tmp = directions[RED][1];
+                        directions[RED][1] = -1 * directions[RED][0];
+                        directions[RED][0] = tmp;
+                        tmp = directions[YELLOW][1];
+                        directions[YELLOW][1] = -1 * directions[YELLOW][0];
+                        directions[YELLOW][0] = tmp;
+                        tmp = directions[BLUE][1];
+                        directions[BLUE][1] = -1 * directions[BLUE][0];
+                        directions[BLUE][0] = tmp;
+                }
+	}
+
 	function init(){
 		// scene = new THREE.Scene();
 		
@@ -169,7 +255,6 @@
 		if (keyCode == 69 || keyCode == 79){ toMove = "rup"; }
 		if (keyCode == 68 || keyCode == 76){ toMove = "right"; }
 		if (keyCode == 67 || keyCode == 59){ toMove = "rdown"; }
-		// if (keyCode == 68 || keyCode )
 	}
 	function rotateAroundWorldAxis(obj, axis, rads){
 		var q = new THREE.Quaternion();
@@ -180,12 +265,10 @@
 	function animate(){
 		// ball();
 		requestAnimationFrame(animate);
-	
+		rotateDirections(cubeDirections, toMove);
 
 		if (toMove == "left"){
-			var quaternion = 500;
 			rotateAroundWorldAxis(daCube, y_axis, -PI/2); 
-			// daCube.matrix.makeRotationFromQuaternion(quaternion);
 			toMove = "";
 		}
 		else if (toMove == "lup"){
