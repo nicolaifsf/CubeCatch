@@ -28,18 +28,17 @@
 		scene = new THREE.Scene();
 		
 		camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight,1, 10000);
-		camera.position.x = 600;
-		camera.position.y = 400;
-		camera.position.z = 600;
+		// camera.position.x = 600;
+		// camera.position.y = 400;
+		camera.position.z = 1000;
 		scene.add(camera);
 
 		geometry = new THREE.BoxGeometry(300,300,300);
 		// material = new THREE.MeshLambertMaterial({color:0x0000FF});
 		var materials = [yellow_side, gray_side, blue_side, green_side, red_side, orange_side];
 		cube = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
-		cube.rotation.x = 0;
-		cube.rotation.y = 0;
-		cube.rotation.z = 0;
+		cube.rotation.x = 7 * PI / 6;
+		cube.rotation.y = 5 * PI / 4;
 
 		scene.add(cube);
 
@@ -119,7 +118,8 @@
 			rotateAroundWorldAxis(cube, y_axis, PI/2);
 			toMove = "";
 		}
-
+		renderer.render(scene, camera);
+	}
 	function ball(){
 		var geometry, material, sphere;
 		geometry = new THREE.SphereGeometry( 100, 32, 32 );
@@ -135,49 +135,49 @@
 
 	var toMove;
 
-    function keyDown(e){
-        var keyCode = e.keyCode;
-        if(keyCode == 65){
-        	// console.log('here');
-            toMove = 'a';
-        }
-        if(keyCode == 87){
-        	toMove = 'w';
-        }
-        if(keyCode == 68){
-        	toMove = 'd';
-        }
-        if(keyCode == 83){
-        	toMove = 's';
-        }
-    }
-	function animate(){
-		requestAnimationFrame(animate);
-				// cube.translateZ(1);
-		ball.translateX(-4);
-		ball.translateY(-2);
+    // function keyDown(e){
+    //     var keyCode = e.keyCode;
+    //     if(keyCode == 65){
+    //     	// console.log('here');
+    //         toMove = 'a';
+    //     }
+    //     if(keyCode == 87){
+    //     	toMove = 'w';
+    //     }
+    //     if(keyCode == 68){
+    //     	toMove = 'd';
+    //     }
+    //     if(keyCode == 83){
+    //     	toMove = 's';
+    //     }
+    // }
+	// function animate(){
+	// 	requestAnimationFrame(animate);
+	// 			// cube.translateZ(1);
+	// 	ball.translateX(-4);
+	// 	ball.translateY(-2);
 
-		// console.log('test');
-        if(toMove == 'a'){
-            cube.rotateY(45);
-            console.log('yay'); 
-            toMove = '0';
-        }
-        else if(toMove == 'w'){
-        	cube.rotateX(10);
-        	toMove = '0';
-        }
-        else if(toMove == 'd'){
-        	cube.rotateY(-45);
-        	toMove = '0';
-        }
-        else if(toMove == 's'){
-        	cube.rotateX(45);
-        	toMove = '0';
-        }
-		renderer.render(scene,camera);
-		controls.update();
-	}
+	// 	// console.log('test');
+ //        if(toMove == 'a'){
+ //            cube.rotateY(45);
+ //            console.log('yay'); 
+ //            toMove = '0';
+ //        }
+ //        else if(toMove == 'w'){
+ //        	cube.rotateX(10);
+ //        	toMove = '0';
+ //        }
+ //        else if(toMove == 'd'){
+ //        	cube.rotateY(-45);
+ //        	toMove = '0';
+ //        }
+ //        else if(toMove == 's'){
+ //        	cube.rotateX(45);
+ //        	toMove = '0';
+ //        }
+	// 	renderer.render(scene,camera);
+	// 	controls.update();
+	// }
 
     document.addEventListener("keyup", keyDown, false);
 
