@@ -46,7 +46,18 @@
 
 		ball = ball();
 
+		// ball();
+		// ball = ball();
+		// var b2 = ball();
+		// b2 = ball();
+		ball.position.z = cube.position.z +500;
+		// ball.position.y = cube.position.y +500;
+		// b2.position.y = cube.position.y +100;
+		// scene.add(b2);
+
 		scene.add(ball);
+
+
 
 
 
@@ -129,8 +140,8 @@
 		geometry = new THREE.SphereGeometry( 60, 32, 32 );
 		material = new THREE.MeshLambertMaterial( {color: 0xffa500} );
 		sphere = new THREE.Mesh( geometry, material );
-		sphere.position.x = window.innerWidth;
-		sphere.position.y = window.innerHeight;
+		// sphere.position.x = window.innerWidth;
+		// sphere.position.y = window.innerHeight;
 		// sphere.position.z = 1000;
 		scene.add(sphere);
 		return sphere;
