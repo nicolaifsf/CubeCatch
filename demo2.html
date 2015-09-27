@@ -18,7 +18,8 @@
 		camera.position.z = 1000;
 		scene.add(camera);
 
-		//cube colors
+		geometry = new THREE.BoxGeometry(300,300,300);
+		// material = new THREE.MeshLambertMaterial({color: 0x0000FF});
 		var materials = [
 		    new THREE.MeshLambertMaterial({
 		        color:0xffff00 }),
@@ -33,14 +34,12 @@
 		    new THREE.MeshLambertMaterial( {
 		        color:0xfff000 }),
 		];
-		 
-		var geometry = new THREE.BoxGeometry(300,300,300, 3, 3, 3),
-		    cube     = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial(materials) );
-
+		cube = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
 		cube.rotation.x = -530;
 		cube.rotation.y=150;
-		scene.add(cube);
+		// cube.rotation.z=50;
 
+		scene.add(cube);
 
 		renderer = new THREE.WebGLRenderer();
 		renderer.setSize(window.innerWidth, window.innerHeight);
@@ -63,13 +62,20 @@
 		// 	cube.rotation.y += 0.02;
 		if(keyboard.pressed("A")){
 			// cube.position.set(cube.position.x, cube.position.y += .2, cube.position.z);
-			cube.translateX(-10);
-			console.log("Werk");
+			// cube.translateX(-10);
+            // cube.rotateY(.02);
+            cube.rotation.y += 70;
+			// console.log("Werk");
 		}
 		if(keyboard.pressed("d")){
-			cube.translateX(10);
-			console.log("it");
+			// cube.translateX(10);
+            cube.rotateY(-.02);
+			// console.log("it");
 		}
+        if(keyboard.pressed("W")){
+            cube.rotateX(-.02); 
+            cube.rotateY(.02);
+        }
 		renderer.render(scene,camera);
 	}
 
