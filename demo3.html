@@ -24,39 +24,48 @@
 	var red_side = new THREE.MeshLambertMaterial({color:0xee0000});
 	var orange_side = new THREE.MeshLambertMaterial({color:0xff7700});
 
+	scene = new THREE.Scene();
+
 	function init(){
-		scene = new THREE.Scene();
+		// scene = new THREE.Scene();
 		
 		camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight,1, 10000);
-		camera.position.x = 1200;
-		camera.position.y = 800;
-		camera.position.z = 1200;
-		camera.rotation.x = 0;
-		camera.rotation.y = PI/4;
-		camera.rotation.z = 0;
+		camera.position.x = 600;
+		camera.position.y = 400;
+		camera.position.z = 600;
 		scene.add(camera);
 
 		geometry = new THREE.BoxGeometry(300,300,300);
-		// material = new THREE.MeshLambertMaterial({color:0x0000FF});
-		var materials = [yellow_side, gray_side, blue_side, green_side, red_side, orange_side];
+		var materials = [
+			yellow_side, gray_side, blue_side, green_side, red_side, orange_side
+		];
 		cube = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
 		cube.rotation.x = 0;
 		cube.rotation.y = 0;
-		cube.position.x = 0;
-		cube.position.y = 0;
-		cube.position.z = 0;
+		cube.rotation.z = 0;
 
 		scene.add(cube);
-		// ball();
-		ball = ball();
-		// var b2 = ball();
-		// b2 = ball();
-		ball.position.z = cube.position.z +500;
-		// ball.position.y = cube.position.y +500;
-		// b2.position.y = cube.position.y +100;
-		// scene.add(b2);
 
-		scene.add(ball);
+		// // ball = ball();
+
+		// s = ball();
+		// s.position.z = cube.position.z + 500;
+		// scene.add(s);
+
+		// b = ball();
+		// b.position.x = cube.position.x + 500;
+		// scene.add(b);
+		// // ball = ball();
+		// // var b2 = ball();
+		// // b2 = ball();
+		// // ball.position.z = cube.position.z +500;
+		// // ball.position.y = cube.position.y +500;
+		// // b2.position.y = cube.position.y +100;
+		// // scene.add(b2);
+
+		// // scene.add(ball);
+
+
 
 
 
@@ -105,6 +114,7 @@
 	}
 
 	function animate(){
+		// ball();
 		requestAnimationFrame(animate);
 		if (toMove == "left"){
 			rotateAroundWorldAxis(cube, y_axis, -PI/2); 
@@ -130,11 +140,42 @@
 			rotateAroundWorldAxis(cube, y_axis, PI/2);
 			toMove = "";
 		}
+		// placeBallInRandomLocation();
 		renderer.render(scene, camera);
 		controls.update();
+		placeBallInRandomLocation();
 	}
+	function placeBallInRandomLocation(){
+		b = ball();
+		var loc = Math.random() * 4;
+		if(loc < 1){
+			// console.log(0);
+			b.position.y = cube.position.y +500;
+		}
+		else if(loc < 2 && loc >=1){
+			// console.log(1);
+			b.position.x = cube.position.x +500;
+		}
+		else if(loc < 3 && loc >=2){
+			// console.log(2);
+			b.position.z = cube.position.z + 500;
+		}
+		else if(loc < 4 && loc >=3){
+			// console.log(3);
+			b.position.x = cube.position.x -500;
+		}
+		else{
+			// console.log('hm');
+		}
+
+
+
+		scene.add(b);
+		// console.log(loc);
+	}
+
 	function ball(){
-		var geometry, material, sphere;
+	 	var geometry, material, sphere;
 		geometry = new THREE.SphereGeometry( 60, 32, 32 );
 		material = new THREE.MeshLambertMaterial( {color: 0xffa500} );
 		sphere = new THREE.Mesh( geometry, material );
@@ -146,7 +187,8 @@
 	}
 
 
-	var toMove;
+
+
 
 	document.addEventListener("keyup", keyDown, false);
 
@@ -158,3 +200,4 @@
 <body onload = "init()">
 </body>
 </html>
+	
