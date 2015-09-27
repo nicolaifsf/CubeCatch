@@ -63,9 +63,9 @@
 		if (color == RED){ return directions[RED]; }
 		else if (color == YELLOW){ return directions[YELLOW]; }
 		else if (color == BLUE){ return directions[BLUE]; }
-		else if (color == ORANGE){ return [-1 * directions[RED][0], -1 * directions[RED][1], -1 * directions[RED][2]]; }
-		else if (color = GRAY){ return [-1 * directions[YELLOW][0], -1 * directions[YELLOW][1], -1 * direction[YELLOW][2]]; }
-		else if (color == GREEN){ return [-1 * directions[BLUE][0], -1 * directions[BLUE][1], -1 * directions[BLUE][2]]; }
+		else if (color == ORANGE){ return [-1 * directions[RED][0] || 0, -1 * directions[RED][1] || 0, -1 * directions[RED][2] || 0]; }
+		else if (color == GRAY){ return [-1 * directions[YELLOW][0] || 0, -1 * directions[YELLOW][1] || 0, -1 * direction[YELLOW][2] || 0]; }
+		else if (color == GREEN){ return [-1 * directions[BLUE][0] || 0, -1 * directions[BLUE][1] || 0, -1 * directions[BLUE][2] || 0]; }
 	}
 
 	function rotateDirections(directions, rotation){
@@ -311,7 +311,7 @@
 		
 		 // console.log(timeElapsed);
 		 timeElapsed+=clock.getElapsedTime();
-		if (timeElapsed > 10){
+		if (timeElapsed > 70){
 			placeBallInRandomLocation();
 			timeElapsed=0;
 		}
@@ -326,7 +326,6 @@
 			if (whenTheBallsAttack[index].position.x< 0){
 				whenTheBallsAttack[index].translateX(10);
 			}
-
 			if (whenTheBallsAttack[index].position.y >0){
 				whenTheBallsAttack[index].translateY(-10);
 			}
@@ -342,26 +341,6 @@
 			}	
 		}
 
-		// determineColl();
-
-		// if(daCube.rotation.x == 0 && daCube.rotation.y < 0 && daCube.rotation.y > -2 && daCube.rotation.z == 0){
-		// 	console.log("yellow forward");
-		// }
-		// else if(daCube.rotation.x > 3 && daCube.rotation.x < 4 && daCube.rotation.y <0 && daCube.rotation.y >-1 && daCube.rotation.z > 3 && daCube.rotation.y <4){
-		// 	console.log("orange forward");
-		// }
-		// else if(daCube.rotation.x == 0 && daCube.rotation.y <2 && daCube.rotation.y > 1 && daCube.rotation.z == 0){
-		// 	console.log('grey forward');
-		// }
-
-		// whenTheBallsAttack[0].translateZ(30);
-
-		// var currBall = whenTheBallsAttack.shift();
-		// console.log(currBall);
-		// currBall.translateZ(5);
-		// ATTACK();
-		// placeBallInRandomLocation();
-		// console.log(whenTheBallsAttack[4]);
 		renderer.render(scene, camera);
 		controls.update();
 		// ATTACK();
@@ -378,79 +357,52 @@
 	var backLeft = false;
 
 	function placeBallInRandomLocation(){
-		if(numBalls == 6){
-			return;
-		}
-		// b = ball();
+		if(numBalls == 6){ return; }
 		var geometry, material, sphere;
 		geometry = new THREE.SphereGeometry( 60, 32, 32 );
 
-		// var geo = new THREE.
-
-		// var index = Math.floor(Math.random()*5)+1
 		var index = Math.floor(Math.random()*6);
 		material = materials[index];
 
 		b = new THREE.Mesh( geometry, material );
 		var loc = Math.random() * 6;
+
+		b.name = [index, "loc"];
+
 		//var loc = 0;
 		if(loc < 1 && !onTop){
-			// ballHash['posY'] = 1;
 			onTop = true;
-			b.position.y = daCube.position.y +500;
-			b.name = index;
-			// console.log(b.name);
-				++numBalls;
-		scene.add(b);
-
+			b.name[1] = "top";
+			b.position.y = daCube.position.y + 1500;
 		}
 		else if(loc < 2 && loc >=1 && !onBot){
-			// console.log(1);
-			// ballHash['negY'] = 1;
 			onBot = true;
-			b.name=index;
-			
-			b.position.y = daCube.position.y -500;
-				++numBalls;
-		scene.add(b);
-
+			b.name[1] = "bot";
+			b.position.y = daCube.position.y - 1500;
 		}
 		else if(loc < 3 && loc >=2 && !froLeft){
-			// ballHash['posZ'] = 1;
-			// console.log(2);
 			froLeft = true;
-			b.position.z = daCube.position.z + 500;
-		scene.add(b);
-				++numBalls;
-
+			b.name[1] = "froLeft";
+			b.position.z = daCube.position.z + 1500;
 		}
 		else if(loc < 4 && loc >=3 && !backRight){
-			// console.log(3);
-			// ballHash['negZ'] = 1;
 			backRight = true;
-			b.position.z = daCube.position.z -500;
-				++numBalls;
-		scene.add(b);
-
+			b.name[1] = "backRight";
+			b.position.z = daCube.position.z - 1500;
 		}
 		else if(loc < 5 && loc >=4 && !froRight){
-			// ballHash['posX'] = 1;
-			// console.log('hm');
 			froRight = true;
-			b.position.x = daCube.position.x +500;
-				++numBalls;
-		scene.add(b);
-
+			b.name[1] = "froRight";
+			b.position.x = daCube.position.x + 1500;
 		}
 		else if(loc < 6 && loc >=5 && !backLeft){
-			// ballHash['negX'] = 1;
 			backLeft = true;
-			b.position.x = daCube.position.x -500;
-				++numBalls;
-		scene.add(b);
-
+			b.name[1] = "backLeft";
+			b.position.x = daCube.position.x - 1500;
 		}
+		else { return; }
 
+		scene.add(b);
 		whenTheBallsAttack.push(b);
 		// return loc;
 		// console.log(loc);
@@ -465,50 +417,79 @@
 		// cB.position.x += 2;
 		return cB;
 	}
-
-	function ball(){
-	 	var geometry, material, sphere;
-		geometry = new THREE.SphereGeometry( 60, 32, 32 );
-
-		// var index = Math.floor(Math.random()*5)+1
-		var index = Math.floor(Math.random()*6);
-		material = materials[index];
-
-		sphere = new THREE.Mesh( geometry, material );
-		// sphere.position.x = window.innerWidth;
-		// sphere.position.y = window.innerHeight;
-		// sphere.position.z = 1000;
-		// scene.add(sphere);
-		if (index == 0){
-			sphere.name = "yellow";
-		}
-		else if (index == 1){
-			sphere.name = "gray";
-		}
-		else if (index == 2){
-			sphere.name = "blue";
-		}
-		else if (index == 3){
-			sphere.name = "green";
-		}
-		else if (index == 4){
-			sphere.name = "red";
-		}
-		else if (index == 5){
-			sphere.name = "orange";
-		}
-		console.log(index);
-
-		return sphere;
-	}
+	// added = true;
 
 	function coll(){
 		// console.log(whenTheBallsAttack);
 		for(var index =0 ; index < whenTheBallsAttack.length; ++index){
-			if(whenTheBallsAttack[index].position.x <= 150 && whenTheBallsAttack[index].position.y <= 150&& whenTheBallsAttack[index].position.z <= 150){
+			if(Math.abs(whenTheBallsAttack[index].position.x) <= 150 &&
+				Math.abs(whenTheBallsAttack[index].position.y) <= 150 &&
+				Math.abs(whenTheBallsAttack[index].position.z) <= 150){
 				scene.remove(whenTheBallsAttack[index]);
-				// console.log('remove');
-
+				colorIndex = whenTheBallsAttack[index].name[0];
+				if (colorIndex == 0){
+					targetColor = "yellow";
+					sideColor = YELLOW;
+				}
+				else if (colorIndex == 1){
+					targetColor = "gray";
+					sideColor = GRAY;
+				}
+				else if (colorIndex == 2){
+					targetColor = "blue";
+					sideColor = BLUE;
+				}
+				else if (colorIndex == 3){
+					targetColor = "green";
+					sideColor = GREEN;
+				}
+				else if (colorIndex == 4){
+					targetColor = "red";
+					sideColor = RED;
+				}
+				else if (colorIndex == 5){
+					targetColor = "orange";
+					sideColor = ORANGE;
+				}
+				direction = whenTheBallsAttack[index].name[1];
+				if (direction == "top"){
+					targetVector = [0,1,0];
+					onTop = false;
+				}
+				else if (direction == "bot"){
+					targetVector = [0,-1,0];
+					onBot = false;
+				}
+				else if (direction == "froLeft"){
+					targetVector = [0,0,1];
+					froLeft = false;
+				}
+				else if (direction == "backRight"){
+					targetVector = [0,0,-1];
+					backRight = false;
+				}
+				else if (direction == "froRight"){
+					targetVector = [1,0,0];
+					froRight = false;
+				}
+				else if (direction == "backLeft"){
+					targetVector = [-1,0,0];
+					backLeft = false;
+				}
+				if (targetVector[0] == getDirection(cubeDirections, sideColor)[0] &&
+					targetVector[1] == getDirection(cubeDirections, sideColor)[1] &&
+					targetVector[2] == getDirection(cubeDirections, sideColor)[2]){
+					if(true){
+						++score;
+						// added=false;
+					}
+				}
+				else {
+					// Destroy cube maybe
+					for (i = 0; i < whenTheBallsAttack.length; i++){ scene.remove(whenTheBallsAttack[i]); }
+					// pause;
+					return;
+				}
 			}
 		}
 
