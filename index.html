@@ -1,116 +1,570 @@
 <!Doctype HTML>
 <html>
 <head>
-<title> Cube Catch </title>
+<title> Cube Catch D3</title>
+<style type = "text/css" src="main.css"></style>
 <style>body{margin:0; padding:0;}</style>
 <script type = "text/javascript" src = "three.min.js"></script>
   <script src="OrbitControls.js"></script>
 <script>
-	var camera, scene, renderer;
-	var geometry, material, cube;
 
+	var score=0;
+
+	// document.getElementById("content").innerHTML="hello world";
+
+	var camera, scene, renderer;
+
+	var cubeFace, faceGeo;
+
+	var daCube;
+
+	var clock;
+	var timeElapsed=0
+
+	var geometry, material, cube;
+	//red = 1, y = 2, b = 3, w = 4, o = 5, g = 6
+	var front = 1;
+
+	var numBalls = 0;
+	// var ballHash = new Object();
 	var PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164;
 
+	var whenTheBallsAttack = [];
+
+	var toMove = "";
+
+	var x_axis = new THREE.Vector3(1,0,0);
+	var y_axis = new THREE.Vector3(0,1,0);
+	var z_axis = new THREE.Vector3(0,0,1);
+
+	var yellow_side = new THREE.MeshLambertMaterial({color:0xdddd00});
+	yellow_side.face = "yellow";
+	var gray_side = new THREE.MeshLambertMaterial({color:0xdddddd});
+	var blue_side = new THREE.MeshLambertMaterial({color:0x00bbee});
+	var green_side = new THREE.MeshLambertMaterial({color:0x00ff00});
+	var red_side = new THREE.MeshLambertMaterial({color:0xee0000});
+	var orange_side = new THREE.MeshLambertMaterial({color:0xff7700});
+
+	scene = new THREE.Scene();
+
+	var materials = [
+		yellow_side, gray_side, blue_side, green_side, red_side, orange_side
+	];
+
+	var RED = 0;
+	var YELLOW = 1;
+	var BLUE = 2;
+	var ORANGE = 3;
+	var GRAY = 4;
+	var GREEN = 5;
+	var cubeDirections = [[0,0,1],[1,0,0],[0,1,0]]
+
+	function getDirection(directions, color){
+		if (color == RED){ return directions[RED]; }
+		else if (color == YELLOW){ return directions[YELLOW]; }
+		else if (color == BLUE){ return directions[BLUE]; }
+		else if (color == ORANGE){ return [-1 * directions[RED][0], -1 * directions[RED][1], -1 * directions[RED][2]]; }
+		else if (color = GRAY){ return [-1 * directions[YELLOW][0], -1 * directions[YELLOW][1], -1 * direction[YELLOW][2]]; }
+		else if (color == GREEN){ return [-1 * directions[BLUE][0], -1 * directions[BLUE][1], -1 * directions[BLUE][2]]; }
+	}
+
+	function rotateDirections(directions, rotation){
+		if (rotation == "left"){
+			tmp = directions[RED][0];
+			directions[RED][0] = -1 * directions[RED][2];
+			directions[RED][2] = tmp;
+			tmp = directions[YELLOW][0];
+                        directions[YELLOW][0] = -1 * directions[YELLOW][2];
+                        directions[YELLOW][2] = tmp;
+			tmp = directions[BLUE][0];
+                        directions[BLUE][0] = -1 * directions[BLUE][2];
+                        directions[BLUE][2] = tmp;
+		}
+		else if (rotation == "right"){
+			tmp = directions[RED][2];
+                        directions[RED][2] = -1 * directions[RED][0];
+                        directions[RED][0] = tmp;
+                        tmp = directions[YELLOW][2];
+                        directions[YELLOW][2] = -1 * directions[YELLOW][0];
+                        directions[YELLOW][0] = tmp;
+                        tmp = directions[BLUE][2];
+                        directions[BLUE][2] = -1 * directions[BLUE][0];
+                        directions[BLUE][0] = tmp;
+		}
+		else if (rotation == "lup"){
+                        tmp = directions[RED][2];
+                        directions[RED][2] = -1 * directions[RED][1];
+                        directions[RED][1] = tmp;
+                        tmp = directions[YELLOW][2];
+                        directions[YELLOW][2] = -1 * directions[YELLOW][1];
+                        directions[YELLOW][1] = tmp;
+                        tmp = directions[BLUE][2];
+                        directions[BLUE][2] = -1 * directions[BLUE][1];
+                        directions[BLUE][1] = tmp;
+                }
+		else if (rotation == "ldown"){
+                        tmp = directions[RED][1];
+                        directions[RED][1] = -1 * directions[RED][2];
+                        directions[RED][2] = tmp;
+                        tmp = directions[YELLOW][1];
+                        directions[YELLOW][1] = -1 * directions[YELLOW][2];
+                        directions[YELLOW][2] = tmp;
+                        tmp = directions[BLUE][1];
+                        directions[BLUE][1] = -1 * directions[BLUE][2];
+                        directions[BLUE][2] = tmp;
+                }
+		else if (rotation == "rup"){
+                        tmp = directions[RED][0];
+                        directions[RED][0] = -1 * directions[RED][1];
+                        directions[RED][1] = tmp;
+                        tmp = directions[YELLOW][0];
+                        directions[YELLOW][0] = -1 * directions[YELLOW][1];
+                        directions[YELLOW][1] = tmp;
+                        tmp = directions[BLUE][0];
+                        directions[BLUE][0] = -1 * directions[BLUE][1];
+                        directions[BLUE][1] = tmp;
+                }
+		else if (rotation == "rdown"){
+                        tmp = directions[RED][1];
+                        directions[RED][1] = -1 * directions[RED][0];
+                        directions[RED][0] = tmp;
+                        tmp = directions[YELLOW][1];
+                        directions[YELLOW][1] = -1 * directions[YELLOW][0];
+                        directions[YELLOW][0] = tmp;
+                        tmp = directions[BLUE][1];
+                        directions[BLUE][1] = -1 * directions[BLUE][0];
+                        directions[BLUE][0] = tmp;
+                }
+	}
 
 	function init(){
-		scene = new THREE.Scene();
+		// scene = new THREE.Scene();
 		
 		camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight,1, 10000);
-		camera.position.z = 1000;
+		camera.position.x = 600;
+		camera.position.y = 400;
+		camera.position.z = 600;
 		scene.add(camera);
 
 		geometry = new THREE.BoxGeometry(300,300,300);
-		// material = new THREE.MeshLambertMaterial({color:0x0000FF});
-		var materials = [
-		    new THREE.MeshLambertMaterial({color:0xff7700}),
-		    new THREE.MeshLambertMaterial({color:0xee0000}),
-		    new THREE.MeshLambertMaterial({color:0x00ff00}),
-		    new THREE.MeshLambertMaterial({color:0x00bbee}),
-		    new THREE.MeshLambertMaterial({color:0xcccccc}),
-		    new THREE.MeshLambertMaterial({color:0xdddd00}),
-		];
 		cube = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
-		cube.rotation.x = 7 * PI / 6;
-		cube.rotation.y = 5 * PI / 4;
+		cube.rotation.x = 0;
+		cube.rotation.y = 0;
+		cube.rotation.z = 0;
 
-		scene.add(cube);
+		faceGeo = new THREE.BoxGeometry(1,300,300);
+		// var mat = new THREE.MeshLambertMaterial({color:0xdddd00});
+		yellowFace = new THREE.Mesh(faceGeo, yellow_side);
+		yellowFace.position.x = 150;
+
+		whiteFace = new THREE.Mesh(faceGeo, gray_side);
+		whiteFace.position.x = -150;
+		
+		faceGeo = new THREE.BoxGeometry(300,1,300);
+		
+		blueFace = new THREE.Mesh(faceGeo, blue_side);
+		blueFace.position.y = 150;
+
+		greenFace = new THREE.Mesh(faceGeo, green_side);
+		greenFace.position.y = -150;
+
+		faceGeo = new THREE.BoxGeometry(300,300, 1);
+		redFace = new THREE.Mesh(faceGeo, red_side);
+		redFace.position.z = 150;
+
+		orangeFace = new THREE.Mesh(faceGeo, orange_side);
+		orangeFace.position.z = -150;
+
+		orangeFace.name = "orange";
+		redFace.name = "red";
+		blueFace.name= "blue";
+		greenFace.name="green";
+		whiteFace.name="white";
+		yellowFace.name = "yellow";
+
+
+		daCube = new THREE.Object3D();
+				daCube.name ="bigDaddyCube";
+
+		daCube.add(orangeFace);
+		daCube.add(redFace);
+		daCube.add(greenFace);
+		daCube.add(blueFace);
+		daCube.add(whiteFace);
+		daCube.add(yellowFace);
+		scene.add(daCube);
+
+		// daCube.rotation.x = 150;
+
+		// console.log(daCube.rotation.x + ',' + daCube.rotation.y + ',' + daCube.rotation.z);
+		// scene.add(daCube);
+
+		// // ball = ball();
+
+		// s = ball();
+		// s.position.z = daCube.position.z + 500;
+		// scene.add(s);
+
+		// b = ball();
+		// b.position.x = daCube.position.x + 500;
+		// scene.add(b);
+		// // ball = ball();
+		// // var b2 = ball();
+		// // b2 = ball();
+		// // ball.position.z = daCube.position.z +500;
+		// // ball.position.y = daCube.position.y +500;
+		// // b2.position.y = daCube.position.y +100;
+		// // scene.add(b2);
+
+		// // scene.add(ball);
+
+
+
+
+
+
 
 		renderer = new THREE.WebGLRenderer();
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.setClearColor(0xeeeedd, 1.0);
 
 		var pointLightForward = new THREE.PointLight(0xffffff, 1.07);
-		var pointLightRight = new THREE.PointLight(0xffffff, 0.24);
-		var pointLightLeft = new THREE.PointLight(0xffffff, 0.24);
+		var pointLightRight = new THREE.PointLight(0xffffff, 0.45);
+		var pointLightLeft = new THREE.PointLight(0xffffff, 0.45);
 		var pointLightTop = new THREE.PointLight(0xffffff, 0.75);
-		pointLightForward.position.y = -600;
-		pointLightForward.position.z = 4500;
-		pointLightRight.position.x = 3000;
-		pointLightLeft.position.x = -3000;
-		pointLightTop.position.y = 3000;
+		pointLightForward.position.x = 1200;
+		pointLightForward.position.y = 1200;
+		pointLightForward.position.z = 1200;
+		pointLightRight.position.x = 2000;
+		pointLightLeft.position.z = 2000;
+		pointLightTop.position.y = 2000;
 		scene.add(pointLightForward);
 		scene.add(pointLightRight);
 		scene.add(pointLightLeft);
 		scene.add(pointLightTop);
 
-
 		document.body.appendChild(renderer.domElement);
 
-		 // Add OrbitControls so that we can pan around with the mouse.
-      controls = new THREE.OrbitControls(camera, renderer.domElement);
+		// Add OrbitControls so that we can pan around with the mouse.
+		controls = new THREE.OrbitControls(camera, renderer.domElement);
 
+
+		clock = new THREE.Clock();
 		animate();
 	}
 
-	var toMove;
-
-    function keyDown(e){
-        var keyCode = e.keyCode;
-        if(keyCode == 65){
-        	// console.log('here');
-            toMove = 'a';
-        }
-        if(keyCode == 87){
-        	toMove = 'w';
-        }
-        if(keyCode == 68){
-        	toMove = 'd';
-        }
-        if(keyCode == 83){
-        	toMove = 's';
-        }
-    }
-	function animate(){
-		requestAnimationFrame(animate);
-		// console.log('test');
-        if(toMove == 'a'){
-            cube.rotateY(45);
-            console.log('yay'); 
-            toMove = '0';
-        }
-        else if(toMove == 'w'){
-        	cube.rotateX(10);
-        	toMove = '0';
-        }
-        else if(toMove == 'd'){
-        	cube.rotateY(-45);
-        	toMove = '0';
-        }
-        else if(toMove == 's'){
-        	cube.rotateX(45);
-        	toMove = '0';
-        }
-		renderer.render(scene,camera);
-		controls.update();
+	function keyDown(e){
+		var keyCode = e.keyCode;
+		if (keyCode == 65 || keyCode == 74){ toMove = "left"; }
+		else if (keyCode == 81 || keyCode == 73){ toMove = "lup"; }
+		else if (keyCode == 90 || keyCode == 75){ toMove = "ldown"; }
+		else if (keyCode == 69 || keyCode == 79){ toMove = "rup"; }
+		else if (keyCode == 68 || keyCode == 76){ toMove = "right"; }
+		else if (keyCode == 67 || keyCode == 59){ toMove = "rdown"; }
+		else if (keyCode == 71){ toMove = "check"; }
+	}
+	function rotateAroundWorldAxis(obj, axis, rads){
+		var q = new THREE.Quaternion();
+		q.setFromAxisAngle(axis, rads);
+		obj.quaternion.multiplyQuaternions(q, obj.quaternion);
 	}
 
-    document.addEventListener("keyup", keyDown, false);
+	function animate(){
+		// ball();
+		requestAnimationFrame(animate);
+		rotateDirections(cubeDirections, toMove);
+
+		if (toMove == "left"){
+			rotateAroundWorldAxis(daCube, y_axis, -PI/2); 
+			toMove = "";
+		}
+		else if (toMove == "lup"){
+			rotateAroundWorldAxis(daCube, x_axis, -PI/2);
+			toMove = "";
+		}
+		else if (toMove == "ldown"){
+			rotateAroundWorldAxis(daCube, x_axis, PI/2);
+			toMove = "";
+		}
+		else if (toMove == "rup"){
+			rotateAroundWorldAxis(daCube, z_axis, PI/2);
+			toMove = "";
+		}
+		else if (toMove == "rdown"){
+			rotateAroundWorldAxis(daCube, z_axis, -PI/2);
+			toMove = "";
+		}
+		else if (toMove == "right"){
+			rotateAroundWorldAxis(daCube, y_axis, PI/2);
+			toMove = "";
+		}
+		else if (toMove == "check"){
+			console.log("r:" + getDirection(cubeDirections, RED));
+			console.log("y:" + getDirection(cubeDirections, YELLOW));
+			console.log("b:" + getDirection(cubeDirections, BLUE));
+			toMove = "";
+		}
+		if(daCube.rotation.x != 0 || daCube.rotation.y != 0 || daCube.rotation.z != 0){
+		// console.log(daCube.rotation.x + ',' + daCube.rotation.y + ',' + daCube.rotation.z);
+		}
+		// console.log()
+		
+		 // console.log(timeElapsed);
+		 timeElapsed+=clock.getElapsedTime();
+		if (timeElapsed > 10){
+			placeBallInRandomLocation();
+			timeElapsed=0;
+		}
+
+		coll();
+
+		// index = placeBallInRandomLocation();
+		for(var index = 0; index < whenTheBallsAttack.length; ++index){
+			if (whenTheBallsAttack[index].position.x >0){
+				whenTheBallsAttack[index].translateX(-10);
+			}
+			if (whenTheBallsAttack[index].position.x< 0){
+				whenTheBallsAttack[index].translateX(10);
+			}
+
+			if (whenTheBallsAttack[index].position.y >0){
+				whenTheBallsAttack[index].translateY(-10);
+			}
+			if (whenTheBallsAttack[index].position.y< 0){
+				whenTheBallsAttack[index].translateY(10);
+			}						
+
+			if (whenTheBallsAttack[index].position.z >0){
+				whenTheBallsAttack[index].translateZ(-10);
+			}
+			if (whenTheBallsAttack[index].position.z< 0){
+				whenTheBallsAttack[index].translateZ(10);
+			}	
+		}
+
+		// determineColl();
+
+		// if(daCube.rotation.x == 0 && daCube.rotation.y < 0 && daCube.rotation.y > -2 && daCube.rotation.z == 0){
+		// 	console.log("yellow forward");
+		// }
+		// else if(daCube.rotation.x > 3 && daCube.rotation.x < 4 && daCube.rotation.y <0 && daCube.rotation.y >-1 && daCube.rotation.z > 3 && daCube.rotation.y <4){
+		// 	console.log("orange forward");
+		// }
+		// else if(daCube.rotation.x == 0 && daCube.rotation.y <2 && daCube.rotation.y > 1 && daCube.rotation.z == 0){
+		// 	console.log('grey forward');
+		// }
+
+		// whenTheBallsAttack[0].translateZ(30);
+
+		// var currBall = whenTheBallsAttack.shift();
+		// console.log(currBall);
+		// currBall.translateZ(5);
+		// ATTACK();
+		// placeBallInRandomLocation();
+		// console.log(whenTheBallsAttack[4]);
+		renderer.render(scene, camera);
+		controls.update();
+		// ATTACK();
+		document.getElementById('squad').innerHTML = score;
+		// ++score;
+	}
+
+
+	var onTop = false;
+	var onBot = false;
+	var froLeft = false;
+	var backRight = false;
+	var froRight = false;
+	var backLeft = false;
+
+	function placeBallInRandomLocation(){
+		if(numBalls == 6){
+			return;
+		}
+		// b = ball();
+		var geometry, material, sphere;
+		geometry = new THREE.SphereGeometry( 60, 32, 32 );
+
+		// var geo = new THREE.
+
+		// var index = Math.floor(Math.random()*5)+1
+		var index = Math.floor(Math.random()*6);
+		material = materials[index];
+
+		b = new THREE.Mesh( geometry, material );
+		var loc = Math.random() * 6;
+		//var loc = 0;
+		if(loc < 1 && !onTop){
+			// ballHash['posY'] = 1;
+			onTop = true;
+			b.position.y = daCube.position.y +500;
+			b.name = index;
+			// console.log(b.name);
+				++numBalls;
+		scene.add(b);
+
+		}
+		else if(loc < 2 && loc >=1 && !onBot){
+			// console.log(1);
+			// ballHash['negY'] = 1;
+			onBot = true;
+			b.name=index;
+			
+			b.position.y = daCube.position.y -500;
+				++numBalls;
+		scene.add(b);
+
+		}
+		else if(loc < 3 && loc >=2 && !froLeft){
+			// ballHash['posZ'] = 1;
+			// console.log(2);
+			froLeft = true;
+			b.position.z = daCube.position.z + 500;
+		scene.add(b);
+				++numBalls;
+
+		}
+		else if(loc < 4 && loc >=3 && !backRight){
+			// console.log(3);
+			// ballHash['negZ'] = 1;
+			backRight = true;
+			b.position.z = daCube.position.z -500;
+				++numBalls;
+		scene.add(b);
+
+		}
+		else if(loc < 5 && loc >=4 && !froRight){
+			// ballHash['posX'] = 1;
+			// console.log('hm');
+			froRight = true;
+			b.position.x = daCube.position.x +500;
+				++numBalls;
+		scene.add(b);
+
+		}
+		else if(loc < 6 && loc >=5 && !backLeft){
+			// ballHash['negX'] = 1;
+			backLeft = true;
+			b.position.x = daCube.position.x -500;
+				++numBalls;
+		scene.add(b);
+
+		}
+
+		whenTheBallsAttack.push(b);
+		// return loc;
+		// console.log(loc);
+	}
+
+	function ATTACK(){
+		var cB = whenTheBallsAttack.shift();
+		// console.log(x);
+		cB.translateZ(10);
+		// console.log('attacking');
+		// x.translateX(50);
+		// cB.position.x += 2;
+		return cB;
+	}
+
+	function ball(){
+	 	var geometry, material, sphere;
+		geometry = new THREE.SphereGeometry( 60, 32, 32 );
+
+		// var index = Math.floor(Math.random()*5)+1
+		var index = Math.floor(Math.random()*6);
+		material = materials[index];
+
+		sphere = new THREE.Mesh( geometry, material );
+		// sphere.position.x = window.innerWidth;
+		// sphere.position.y = window.innerHeight;
+		// sphere.position.z = 1000;
+		// scene.add(sphere);
+		if (index == 0){
+			sphere.name = "yellow";
+		}
+		else if (index == 1){
+			sphere.name = "gray";
+		}
+		else if (index == 2){
+			sphere.name = "blue";
+		}
+		else if (index == 3){
+			sphere.name = "green";
+		}
+		else if (index == 4){
+			sphere.name = "red";
+		}
+		else if (index == 5){
+			sphere.name = "orange";
+		}
+		console.log(index);
+
+		return sphere;
+	}
+
+	function coll(){
+		// console.log(whenTheBallsAttack);
+		for(var index =0 ; index < whenTheBallsAttack.length; ++index){
+			if(whenTheBallsAttack[index].position.x <= 150 && whenTheBallsAttack[index].position.y <= 150&& whenTheBallsAttack[index].position.z <= 150){
+				scene.remove(whenTheBallsAttack[index]);
+				// console.log('remove');
+
+			}
+		}
+
+		// var originPoint = daCube.position.clone();
+		// console.log(daCube.object);
+		// console.log(daCube.orange);
+		// var obj = scene.getObjectByName('orange');
+
+		
+		// console.log(obj);
+		// for(var x = 0; x < daCube.geometry.vertices.length;++x){
+			
+		// }
+
+	}
+
+
+
+	// function determineColl(){
+ //        var originPoint = daCube.position.clone();
+ //        for(var vertexIndex = 0; vertexIndex < daCube.geometry.vertices.length; ++vertexIndex){
+ //            var localVertex = daCube.geometry.vertices[vertexIndex].clone();
+ //            var globalVertex = localVertex.applyMatrix4(daCube.matrix);
+ //            var directionVector = globalVertex.sub(daCube.position);
+
+ //            var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
+ //            var collisionResults = ray.intersectObjects(whenTheBallsAttack);
+ //            // console.log(collisionResults[0]);
+ //            // console.log(collisionResults[vertexIndex]);
+ //            if(collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()){
+ //            	// console.log(collisionResults[vertexIndex]);
+ //                // console.log('hit'); 
+ //                // console.log(collisionResults[vertexIndex]);
+ //            }
+ //            for(var x =0 ; x < collisionResults.length; ++x){
+ //            	// console.log(collisionResults[x]);
+ //            	scene.remove(collisionResults[x].object);
+ //            	// console.log(collisionResults[x]);
+ //            }
+ //        	}
+
+	// }
+
+
+
+
+	document.addEventListener("keyup", keyDown, false);
 
 
 
 
 </script>
 </head>
+
 <body onload = "init()">
+<div style="font-size: 32px;; text-color:white;width:100vw; height: 8vh; text-align:center; vertical-align:center; padding-top:10px;background-color:#EEEEDD;"id="squad">Testing</div>
 </body>
 </html>
+	
