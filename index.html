@@ -9,11 +9,17 @@
 	var camera, scene, renderer;
 	var geometry, material, cube;
 
+	var sphereMat, sphereGeo;
+
+var b;
+
 	var PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164;
 
-
 	function init(){
+		b = ball();
 		scene = new THREE.Scene();
+
+		scene.add(b);
 		
 		camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight,1, 10000);
 		camera.position.z = 1000;
@@ -53,14 +59,31 @@
 		scene.add(pointLightLeft);
 		scene.add(pointLightTop);
 
+		scene.updateMatrixWorld();
+
+// var vector = new THREE.Vector3();
+// cube.translateZ += 200;
+// console.log(vector.setFromMatrixPosition( cube.matrixWorld ));
+
+		console.log(cube.matrixWorld.y);
 
 		document.body.appendChild(renderer.domElement);
 
 		 // Add OrbitControls so that we can pan around with the mouse.
       controls = new THREE.OrbitControls(camera, renderer.domElement);
-
 		animate();
 	}
+
+	function ball(position){
+		var sphereGeo = new THREE.SphereGeometry(100,32,32);
+		var sphereMat = new THREE.MeshLambertMaterial({color: 0xffa500} );
+		var sphere = new THREE.Mesh(sphereGeo, sphereMat);
+		// scene.add(sphere);
+		// var sPos = cube.matrixWorld.x;
+		// console.log(sPos);
+		return sphere;
+	}
+
 
 	var toMove;
 
@@ -80,9 +103,29 @@
         	toMove = 's';
         }
     }
+    // var pos2 = 3;
 	function animate(){
 		requestAnimationFrame(animate);
+		scene.updateMatrixWorld();
+
 		// console.log('test');
+		// ball.translateZ(10);
+// var vector = new THREE.Vector3();
+// vector.setMat( cube.matrixWorld );
+
+		// cube.translateX(2);
+
+		// scene.updateMatrixWorld()
+
+		// cube.position.x = pos2;
+		// b.translateX(-2);
+
+		position = new THREE.Vector3();	
+
+		position.setFromMatrixPosition( b.matrixWorld );
+
+		console.log(position);
+// console.log(vector);
         if(toMove == 'a'){
             cube.rotateY(45);
             console.log('yay'); 
@@ -105,7 +148,6 @@
 	}
 
     document.addEventListener("keyup", keyDown, false);
-
 
 
 
