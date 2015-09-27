@@ -35,6 +35,13 @@
 
 		scene.add(cube);
 
+		ball = ball();
+
+		scene.add(ball);
+
+
+
+
 		renderer = new THREE.WebGLRenderer();
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.setClearColor(0xeeeedd, 1.0);
@@ -62,6 +69,19 @@
 		animate();
 	}
 
+	function ball(){
+		var geometry, material, sphere;
+		geometry = new THREE.SphereGeometry( 100, 32, 32 );
+		material = new THREE.MeshLambertMaterial( {color: 0xffa500} );
+		sphere = new THREE.Mesh( geometry, material );
+		sphere.position.x = window.innerWidth;
+		sphere.position.y = window.innerHeight;
+		// sphere.position.z = 1000;
+		scene.add(sphere);
+		return sphere;
+	}
+
+
 	var toMove;
 
     function keyDown(e){
@@ -82,6 +102,10 @@
     }
 	function animate(){
 		requestAnimationFrame(animate);
+				// cube.translateZ(1);
+		ball.translateX(-4);
+		ball.translateY(-2);
+
 		// console.log('test');
         if(toMove == 'a'){
             cube.rotateY(45);
