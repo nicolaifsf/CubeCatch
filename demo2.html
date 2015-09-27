@@ -5,6 +5,7 @@
 <style>body{margin:0; padding:0;}</style>
 <script type = "text/javascript" src = "three.min.js"></script>
 <script type = "text/javascript" src = "THREEx.KeyBoardState.js"></script>
+<script type = "text/javascript" src = "Math.js"></script>
 <script>
 	var camera, scene, renderer;
 	var geometry, material, cube;
@@ -29,9 +30,8 @@
 		    new THREE.MeshLambertMaterial({color:0xdddd00}),
 		];
 		cube = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
-		cube.rotation.x = 53.9;
-		cube.rotation.y=150.01;
-		// cube.rotation.z=50;
+		cube.rotation.x = 7 * Math.PI / 6;
+		cube.rotation.y = 5 * Math.PI / 4;
 
 		scene.add(cube);
 
