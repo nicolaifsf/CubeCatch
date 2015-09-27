@@ -9,8 +9,9 @@
 	var camera, scene, renderer;
 	var geometry, material, cube;
 
+
 	var numBalls = 0;
-	var ballHash = new Object();
+	// var ballHash = new Object();
 	var PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164;
 
 	var whenTheBallsAttack = [];
@@ -159,39 +160,65 @@
 		controls.update();
 		// ATTACK();
 	}
+
+
+	var onTop = false;
+	var onBot = false;
+	var froLeft = false;
+	var backRight = false;
+	var froRight = false;
+	var backLeft = false;
+
 	function placeBallInRandomLocation(){
 		b = ball();
 		var loc = Math.random() * 6;
-		if(loc < 1){
+		if(loc < 1 && !onTop){
 			// console.log(0);
-			ballHash['posY'] = 1;
+			// ballHash['posY'] = 1;
+			onTop = true;
 			b.position.y = cube.position.y +500;
+				++numBalls;
+
 		}
-		else if(loc < 2 && loc >=1){
+		else if(loc < 2 && loc >=1 && !onBot){
 			// console.log(1);
-			ballHash['negY'] = 1;
+			// ballHash['negY'] = 1;
+			onBot = true;
 			b.position.y = cube.position.y -500;
+				++numBalls;
+
 		}
-		else if(loc < 3 && loc >=2){
-			ballHash['posZ'] = 1;
+		else if(loc < 3 && loc >=2 && !froLeft){
+			// ballHash['posZ'] = 1;
 			// console.log(2);
+			froLeft = true;
 			b.position.z = cube.position.z + 500;
+				++numBalls;
+
 		}
-		else if(loc < 4 && loc >=3){
+		else if(loc < 4 && loc >=3 && !backRight){
 			// console.log(3);
-			ballHash['negZ'] = 1;
+			// ballHash['negZ'] = 1;
+			backRight = true;
 			b.position.z = cube.position.z -500;
+				++numBalls;
+
 		}
-		else if(loc < 5 && loc >=4){
-			ballHash['posX'] = 1;
+		else if(loc < 5 && loc >=4 && !froRight){
+			// ballHash['posX'] = 1;
 			// console.log('hm');
+			froRight = true;
 			b.position.x = cube.position.x +500;
+				++numBalls;
+
 		}
-		else if(loc < 6 && loc >=5){
-			ballHash['negX'] = 1;
+		else if(loc < 6 && loc >=5 && !backLeft){
+			// ballHash['negX'] = 1;
+			backLeft = true;
 			b.position.x = cube.position.x -500;
+				++numBalls;
+
 		}
-		++numBalls;
 
 		whenTheBallsAttack.push(b);
 		scene.add(b);
