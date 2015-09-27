@@ -1,9 +1,10 @@
 <!Doctype HTML>
 <html>
 <head>
-<title> WASD </title>
+<title> Cube Catch </title>
 <style>body{margin:0; padding:0;}</style>
 <script type = "text/javascript" src = "three.min.js"></script>
+  <script src="OrbitControls.js"></script>
 <script>
 	var camera, scene, renderer;
 	var geometry, material, cube;
@@ -54,6 +55,10 @@
 
 
 		document.body.appendChild(renderer.domElement);
+
+		 // Add OrbitControls so that we can pan around with the mouse.
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+
 		animate();
 	}
 
@@ -96,6 +101,7 @@
         	toMove = '0';
         }
 		renderer.render(scene,camera);
+		controls.update();
 	}
 
     document.addEventListener("keyup", keyDown, false);
