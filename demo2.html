@@ -62,6 +62,7 @@
     function keyDown(e){
         var keyCode = e.keyCode;
         if(keyCode == 65){
+        	// console.log('here');
             toMove = 'a';
         }
         if(keyCode == 87){
@@ -76,7 +77,7 @@
     }
 	function animate(){
 		requestAnimationFrame(animate);
-
+		// console.log('test');
         if(toMove == 'a'){
             cube.rotateY(45);
             console.log('yay'); 
@@ -96,6 +97,8 @@
         }
 		renderer.render(scene,camera);
 	}
+
+    document.addEventListener("keyup", keyDown, false);
 
 
 
