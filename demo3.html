@@ -10,6 +10,7 @@
 
 	var cubeFace, faceGeo;
 
+	var daCube;
 
 	var geometry, material, cube;
 	//red = 1, y = 2, b = 3, w = 4, o = 5, g = 6
@@ -79,35 +80,45 @@
 		orangeFace = new THREE.Mesh(faceGeo, orange_side);
 		orangeFace.position.z = -150;
 
-		group = new THREE.Object3D();
-		group.add(orangeFace);
-		group.add(redFace);
-		group.add(greenFace);
-		group.add(blueFace);
-		group.add(whiteFace);
-		group.add(yellowFace);
-		scene.add(group);
+		orangeFace.name = "orange";
+		redFace.name = "red";
+		blueFace.name= "blue";
+		greenFace.name="green";
+		whiteFace.name="white";
+		yellowFace.name = "yellow";
 
-		group.rotation.x = 150;
 
-		// console.log(cube.rotation.x + ',' + cube.rotation.y + ',' + cube.rotation.z);
-		// scene.add(cube);
+		daCube = new THREE.Object3D();
+				daCube.name ="bigDaddyCube";
+
+		daCube.add(orangeFace);
+		daCube.add(redFace);
+		daCube.add(greenFace);
+		daCube.add(blueFace);
+		daCube.add(whiteFace);
+		daCube.add(yellowFace);
+		scene.add(daCube);
+
+		// daCube.rotation.x = 150;
+
+		// console.log(daCube.rotation.x + ',' + daCube.rotation.y + ',' + daCube.rotation.z);
+		// scene.add(daCube);
 
 		// // ball = ball();
 
 		// s = ball();
-		// s.position.z = cube.position.z + 500;
+		// s.position.z = daCube.position.z + 500;
 		// scene.add(s);
 
 		// b = ball();
-		// b.position.x = cube.position.x + 500;
+		// b.position.x = daCube.position.x + 500;
 		// scene.add(b);
 		// // ball = ball();
 		// // var b2 = ball();
 		// // b2 = ball();
-		// // ball.position.z = cube.position.z +500;
-		// // ball.position.y = cube.position.y +500;
-		// // b2.position.y = cube.position.y +100;
+		// // ball.position.z = daCube.position.z +500;
+		// // ball.position.y = daCube.position.y +500;
+		// // b2.position.y = daCube.position.y +100;
 		// // scene.add(b2);
 
 		// // scene.add(ball);
@@ -168,35 +179,36 @@
 
 		if (toMove == "left"){
 			var quaternion = 500;
-			rotateAroundWorldAxis(cube, y_axis, -PI/2); 
-			// cube.matrix.makeRotationFromQuaternion(quaternion);
+			rotateAroundWorldAxis(daCube, y_axis, -PI/2); 
+			// daCube.matrix.makeRotationFromQuaternion(quaternion);
 			toMove = "";
 		}
 		else if (toMove == "lup"){
-			rotateAroundWorldAxis(cube, x_axis, -PI/2);
+			rotateAroundWorldAxis(daCube, x_axis, -PI/2);
 			toMove = "";
 		}
 		else if (toMove == "ldown"){
-			rotateAroundWorldAxis(cube, x_axis, PI/2);
+			rotateAroundWorldAxis(daCube, x_axis, PI/2);
 			toMove = "";
 		}
 		else if (toMove == "rup"){
-			rotateAroundWorldAxis(cube, z_axis, PI/2);
+			rotateAroundWorldAxis(daCube, z_axis, PI/2);
 			toMove = "";
 		}
 		else if (toMove == "rdown"){
-			rotateAroundWorldAxis(cube, z_axis, -PI/2);
+			rotateAroundWorldAxis(daCube, z_axis, -PI/2);
 			toMove = "";
 		}
 		else if (toMove == "right"){
-			rotateAroundWorldAxis(cube, y_axis, PI/2);
+			rotateAroundWorldAxis(daCube, y_axis, PI/2);
 			toMove = "";
 		}
-		if(cube.rotation.x != 0 || cube.rotation.y != 0 || cube.rotation.z != 0){
-		// console.log(cube.rotation.x + ',' + cube.rotation.y + ',' + cube.rotation.z);
+		if(daCube.rotation.x != 0 || daCube.rotation.y != 0 || daCube.rotation.z != 0){
+		// console.log(daCube.rotation.x + ',' + daCube.rotation.y + ',' + daCube.rotation.z);
 		}
 		// console.log()
 		placeBallInRandomLocation();
+		coll();
 
 		// index = placeBallInRandomLocation();
 		for(var index = 0; index < whenTheBallsAttack.length; ++index){
@@ -222,15 +234,15 @@
 			}	
 		}
 
-		determineColl();
+		// determineColl();
 
-		// if(cube.rotation.x == 0 && cube.rotation.y < 0 && cube.rotation.y > -2 && cube.rotation.z == 0){
+		// if(daCube.rotation.x == 0 && daCube.rotation.y < 0 && daCube.rotation.y > -2 && daCube.rotation.z == 0){
 		// 	console.log("yellow forward");
 		// }
-		// else if(cube.rotation.x > 3 && cube.rotation.x < 4 && cube.rotation.y <0 && cube.rotation.y >-1 && cube.rotation.z > 3 && cube.rotation.y <4){
+		// else if(daCube.rotation.x > 3 && daCube.rotation.x < 4 && daCube.rotation.y <0 && daCube.rotation.y >-1 && daCube.rotation.z > 3 && daCube.rotation.y <4){
 		// 	console.log("orange forward");
 		// }
-		// else if(cube.rotation.x == 0 && cube.rotation.y <2 && cube.rotation.y > 1 && cube.rotation.z == 0){
+		// else if(daCube.rotation.x == 0 && daCube.rotation.y <2 && daCube.rotation.y > 1 && daCube.rotation.z == 0){
 		// 	console.log('grey forward');
 		// }
 
@@ -275,7 +287,7 @@
 		if(loc < 1 && !onTop){
 			// ballHash['posY'] = 1;
 			onTop = true;
-			b.position.y = cube.position.y +500;
+			b.position.y = daCube.position.y +500;
 				++numBalls;
 
 		}
@@ -283,7 +295,7 @@
 			// console.log(1);
 			// ballHash['negY'] = 1;
 			onBot = true;
-			b.position.y = cube.position.y -500;
+			b.position.y = daCube.position.y -500;
 				++numBalls;
 
 		}
@@ -291,7 +303,7 @@
 			// ballHash['posZ'] = 1;
 			// console.log(2);
 			froLeft = true;
-			b.position.z = cube.position.z + 500;
+			b.position.z = daCube.position.z + 500;
 				++numBalls;
 
 		}
@@ -299,7 +311,7 @@
 			// console.log(3);
 			// ballHash['negZ'] = 1;
 			backRight = true;
-			b.position.z = cube.position.z -500;
+			b.position.z = daCube.position.z -500;
 				++numBalls;
 
 		}
@@ -307,14 +319,14 @@
 			// ballHash['posX'] = 1;
 			// console.log('hm');
 			froRight = true;
-			b.position.x = cube.position.x +500;
+			b.position.x = daCube.position.x +500;
 				++numBalls;
 
 		}
 		else if(loc < 6 && loc >=5 && !backLeft){
 			// ballHash['negX'] = 1;
 			backLeft = true;
-			b.position.x = cube.position.x -500;
+			b.position.x = daCube.position.x -500;
 				++numBalls;
 
 		}
@@ -371,30 +383,46 @@
 		return sphere;
 	}
 
-	function determineColl(){
-        var originPoint = cube.position.clone();
-        for(var vertexIndex = 0; vertexIndex < cube.geometry.vertices.length; ++vertexIndex){
-            var localVertex = cube.geometry.vertices[vertexIndex].clone();
-            var globalVertex = localVertex.applyMatrix4(cube.matrix);
-            var directionVector = globalVertex.sub(cube.position);
+	function coll(){
+		var originPoint = daCube.position.clone();
+		// console.log(daCube.object);
+		// console.log(daCube.orange);
+		var obj = scene.getObjectByName('orange');
 
-            var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
-            var collisionResults = ray.intersectObjects(whenTheBallsAttack);
-            // console.log(collisionResults[0]);
-            // console.log(collisionResults[vertexIndex]);
-            if(collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()){
-            	// console.log(collisionResults[vertexIndex]);
-                // console.log('hit'); 
-                // console.log(collisionResults[vertexIndex]);
-            }
-            for(var x =0 ; x < collisionResults.length; ++x){
-            	// console.log(collisionResults[x]);
-            	scene.remove(collisionResults[x].object);
-            	// console.log(collisionResults[x]);
-            }
-        	}
+		
+		// console.log(obj);
+		// for(var x = 0; x < daCube.geometry.vertices.length;++x){
+			
+		// }
 
 	}
+
+
+
+	// function determineColl(){
+ //        var originPoint = daCube.position.clone();
+ //        for(var vertexIndex = 0; vertexIndex < daCube.geometry.vertices.length; ++vertexIndex){
+ //            var localVertex = daCube.geometry.vertices[vertexIndex].clone();
+ //            var globalVertex = localVertex.applyMatrix4(daCube.matrix);
+ //            var directionVector = globalVertex.sub(daCube.position);
+
+ //            var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
+ //            var collisionResults = ray.intersectObjects(whenTheBallsAttack);
+ //            // console.log(collisionResults[0]);
+ //            // console.log(collisionResults[vertexIndex]);
+ //            if(collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()){
+ //            	// console.log(collisionResults[vertexIndex]);
+ //                // console.log('hit'); 
+ //                // console.log(collisionResults[vertexIndex]);
+ //            }
+ //            for(var x =0 ; x < collisionResults.length; ++x){
+ //            	// console.log(collisionResults[x]);
+ //            	scene.remove(collisionResults[x].object);
+ //            	// console.log(collisionResults[x]);
+ //            }
+ //        	}
+
+	// }
 
 
 
