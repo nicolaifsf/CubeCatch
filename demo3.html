@@ -152,29 +152,29 @@
 			// ATTACK();
 		}
 
-		index = placeBallInRandomLocation();
+		// index = placeBallInRandomLocation();
+		for(var index = 0; index < whenTheBallsAttack.length; ++index){
+			if (whenTheBallsAttack[index].position.x >0){
+				whenTheBallsAttack[index].translateX(-10);
+			}
+			if (whenTheBallsAttack[index].position.x< 0){
+				whenTheBallsAttack[index].translateX(10);
+			}
 
-		if (whenTheBallsAttack[index].position.x >0){
-			whenTheBallsAttack[index].translateX(-10);
-		}
-		if (whenTheBallsAttack[index].position.x< 0){
-			whenTheBallsAttack[index].translateX(10);
-		}
+			if (whenTheBallsAttack[index].position.y >0){
+				whenTheBallsAttack[index].translateY(-10);
+			}
+			if (whenTheBallsAttack[index].position.y< 0){
+				whenTheBallsAttack[index].translateY(10);
+			}						
 
-		if (whenTheBallsAttack[index].position.y >0){
-			whenTheBallsAttack[index].translateY(-10);
+			if (whenTheBallsAttack[index].position.z >0){
+				whenTheBallsAttack[index].translateZ(-10);
+			}
+			if (whenTheBallsAttack[index].position.z< 0){
+				whenTheBallsAttack[index].translateZ(10);
+			}	
 		}
-		if (whenTheBallsAttack[index].position.y< 0){
-			whenTheBallsAttack[index].translateY(10);
-		}						
-
-		if (whenTheBallsAttack[index].position.z >0){
-			whenTheBallsAttack[index].translateZ(-10);
-		}
-		if (whenTheBallsAttack[index].position.z< 0){
-			whenTheBallsAttack[index].translateZ(10);
-		}	
-
 
 		// whenTheBallsAttack[0].translateZ(30);
 
