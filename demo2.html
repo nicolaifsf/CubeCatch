@@ -28,23 +28,19 @@
 		scene = new THREE.Scene();
 		
 		camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight,1, 10000);
-		camera.position.x = 1200;
-		camera.position.y = 800;
-		camera.position.z = 1200;
-		camera.rotation.x = 0;
-		camera.rotation.y = PI/4;
-		camera.rotation.z = 0;
+		camera.position.x = 600;
+		camera.position.y = 400;
+		camera.position.z = 600;
 		scene.add(camera);
 
 		geometry = new THREE.BoxGeometry(300,300,300);
-		// material = new THREE.MeshLambertMaterial({color:0x0000FF});
-		var materials = [yellow_side, gray_side, blue_side, green_side, red_side, orange_side];
+		var materials = [
+			yellow_side, gray_side, blue_side, green_side, red_side, orange_side
+		];
 		cube = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
 		cube.rotation.x = 0;
 		cube.rotation.y = 0;
-		cube.position.x = 0;
-		cube.position.y = 0;
-		cube.position.z = 0;
+		cube.rotation.z = 0;
 
 		scene.add(cube);
 
@@ -125,9 +121,11 @@
 			toMove = "";
 		}
 		renderer.render(scene, camera);
+		controls.update();
 	}
+
 	function ball(){
-		var geometry, material, sphere;
+	 	var geometry, material, sphere;
 		geometry = new THREE.SphereGeometry( 60, 32, 32 );
 		material = new THREE.MeshLambertMaterial( {color: 0xffa500} );
 		sphere = new THREE.Mesh( geometry, material );
@@ -139,7 +137,6 @@
 	}
 
 
-	var toMove;
 
 	document.addEventListener("keyup", keyDown, false);
 
