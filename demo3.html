@@ -479,10 +479,19 @@
 	}
 
 	function coll(){
-		var originPoint = daCube.position.clone();
+		// console.log(whenTheBallsAttack);
+		for(var index =0 ; index < whenTheBallsAttack.length; ++index){
+			if(whenTheBallsAttack[index].position.x <= 150 && whenTheBallsAttack[index].position.y <= 150&& whenTheBallsAttack[index].position.z <= 150){
+				scene.remove(whenTheBallsAttack[index]);
+				// console.log('remove');
+
+			}
+		}
+
+		// var originPoint = daCube.position.clone();
 		// console.log(daCube.object);
 		// console.log(daCube.orange);
-		var obj = scene.getObjectByName('orange');
+		// var obj = scene.getObjectByName('orange');
 
 		
 		// console.log(obj);
