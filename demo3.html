@@ -7,8 +7,13 @@
   <script src="OrbitControls.js"></script>
 <script>
 	var camera, scene, renderer;
-	var geometry, material, cube;
 
+	var cubeFace, faceGeo;
+
+
+	var geometry, material, cube;
+	//red = 1, y = 2, b = 3, w = 4, o = 5, g = 6
+	var front = 1;
 
 	var numBalls = 0;
 	// var ballHash = new Object();
@@ -23,6 +28,7 @@
 	var z_axis = new THREE.Vector3(0,0,1);
 
 	var yellow_side = new THREE.MeshLambertMaterial({color:0xdddd00});
+	yellow_side.face = "yellow";
 	var gray_side = new THREE.MeshLambertMaterial({color:0xdddddd});
 	var blue_side = new THREE.MeshLambertMaterial({color:0x00bbee});
 	var green_side = new THREE.MeshLambertMaterial({color:0x00ff00});
@@ -50,7 +56,42 @@
 		cube.rotation.y = 0;
 		cube.rotation.z = 0;
 
-		scene.add(cube);
+		faceGeo = new THREE.BoxGeometry(1,300,300);
+		// var mat = new THREE.MeshLambertMaterial({color:0xdddd00});
+		yellowFace = new THREE.Mesh(faceGeo, yellow_side);
+		yellowFace.position.x = 150;
+
+		whiteFace = new THREE.Mesh(faceGeo, gray_side);
+		whiteFace.position.x = -150;
+		
+		faceGeo = new THREE.BoxGeometry(300,1,300);
+		
+		blueFace = new THREE.Mesh(faceGeo, blue_side);
+		blueFace.position.y = 150;
+
+		greenFace = new THREE.Mesh(faceGeo, green_side);
+		greenFace.position.y = -150;
+
+		faceGeo = new THREE.BoxGeometry(300,300, 1);
+		redFace = new THREE.Mesh(faceGeo, red_side);
+		redFace.position.z = 150;
+
+		orangeFace = new THREE.Mesh(faceGeo, orange_side);
+		orangeFace.position.z = -150;
+
+		group = new THREE.Object3D();
+		group.add(orangeFace);
+		group.add(redFace);
+		group.add(greenFace);
+		group.add(blueFace);
+		group.add(whiteFace);
+		group.add(yellowFace);
+		scene.add(group);
+
+		group.rotation.x = 150;
+
+		// console.log(cube.rotation.x + ',' + cube.rotation.y + ',' + cube.rotation.z);
+		// scene.add(cube);
 
 		// // ball = ball();
 
@@ -70,6 +111,7 @@
 		// // scene.add(b2);
 
 		// // scene.add(ball);
+
 
 
 
@@ -125,7 +167,9 @@
 	
 
 		if (toMove == "left"){
+			var quaternion = 500;
 			rotateAroundWorldAxis(cube, y_axis, -PI/2); 
+			// cube.matrix.makeRotationFromQuaternion(quaternion);
 			toMove = "";
 		}
 		else if (toMove == "lup"){
@@ -148,7 +192,10 @@
 			rotateAroundWorldAxis(cube, y_axis, PI/2);
 			toMove = "";
 		}
-
+		if(cube.rotation.x != 0 || cube.rotation.y != 0 || cube.rotation.z != 0){
+		// console.log(cube.rotation.x + ',' + cube.rotation.y + ',' + cube.rotation.z);
+		}
+		// console.log()
 		placeBallInRandomLocation();
 
 		// index = placeBallInRandomLocation();
@@ -177,6 +224,16 @@
 
 		determineColl();
 
+		// if(cube.rotation.x == 0 && cube.rotation.y < 0 && cube.rotation.y > -2 && cube.rotation.z == 0){
+		// 	console.log("yellow forward");
+		// }
+		// else if(cube.rotation.x > 3 && cube.rotation.x < 4 && cube.rotation.y <0 && cube.rotation.y >-1 && cube.rotation.z > 3 && cube.rotation.y <4){
+		// 	console.log("orange forward");
+		// }
+		// else if(cube.rotation.x == 0 && cube.rotation.y <2 && cube.rotation.y > 1 && cube.rotation.z == 0){
+		// 	console.log('grey forward');
+		// }
+
 		// whenTheBallsAttack[0].translateZ(30);
 
 		// var currBall = whenTheBallsAttack.shift();
@@ -184,6 +241,7 @@
 		// currBall.translateZ(5);
 		// ATTACK();
 		// placeBallInRandomLocation();
+		// console.log(whenTheBallsAttack[4]);
 		renderer.render(scene, camera);
 		controls.update();
 		// ATTACK();
@@ -201,11 +259,20 @@
 		if(numBalls == 6){
 			return;
 		}
-		b = ball();
+		// b = ball();
+		var geometry, material, sphere;
+		geometry = new THREE.SphereGeometry( 60, 32, 32 );
+
+		// var geo = new THREE.
+
+		// var index = Math.floor(Math.random()*5)+1
+		var index = Math.floor(Math.random()*6);
+		material = materials[index];
+
+		b = new THREE.Mesh( geometry, material );
 		var loc = Math.random() * 6;
 		//var loc = 0;
 		if(loc < 1 && !onTop){
-			console.log(0);
 			// ballHash['posY'] = 1;
 			onTop = true;
 			b.position.y = cube.position.y +500;
@@ -272,8 +339,8 @@
 	 	var geometry, material, sphere;
 		geometry = new THREE.SphereGeometry( 60, 32, 32 );
 
-		var index = Math.floor(Math.random()*5)+1
-
+		// var index = Math.floor(Math.random()*5)+1
+		var index = Math.floor(Math.random()*6);
 		material = materials[index];
 
 		sphere = new THREE.Mesh( geometry, material );
@@ -281,24 +348,25 @@
 		// sphere.position.y = window.innerHeight;
 		// sphere.position.z = 1000;
 		// scene.add(sphere);
-		if (index = 0){
-			sphere.name = "yellow";
-		}
-		if (index = 1){
-			sphere.name = "gray";
-		}
-		if (index = 2){
-			sphere.name = "blue";
-		}
-		if (index = 3){
-			sphere.name = "green";
-		}
-		if (index = 4){
-			sphere.name = "red";
-		}
-		if (index = 5){
-			sphere.name = "orange";
-		}
+		// if (index == 0){
+		// 	sphere.name = "yellow";
+		// }
+		// else if (index == 1){
+		// 	sphere.name = "gray";
+		// }
+		// else if (index == 2){
+		// 	sphere.name = "blue";
+		// }
+		// else if (index == 3){
+		// 	sphere.name = "green";
+		// }
+		// else if (index == 4){
+		// 	sphere.name = "red";
+		// }
+		// else if (index == 5){
+		// 	sphere.name = "orange";
+		// }
+		// console.log(index);
 
 		return sphere;
 	}
@@ -312,10 +380,19 @@
 
             var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
             var collisionResults = ray.intersectObjects(whenTheBallsAttack);
+            // console.log(collisionResults[0]);
+            // console.log(collisionResults[vertexIndex]);
             if(collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()){
+            	// console.log(collisionResults[vertexIndex]);
                 // console.log('hit'); 
+                // console.log(collisionResults[vertexIndex]);
             }
-        }
+            for(var x =0 ; x < collisionResults.length; ++x){
+            	// console.log(collisionResults[x]);
+            	scene.remove(collisionResults[x].object);
+            	// console.log(collisionResults[x]);
+            }
+        	}
 
 	}
 
