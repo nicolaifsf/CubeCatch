@@ -12,6 +12,9 @@
 
 	var daCube;
 
+	var clock;
+	var timeElapsed=0
+
 	var geometry, material, cube;
 	//red = 1, y = 2, b = 3, w = 4, o = 5, g = 6
 	var front = 1;
@@ -153,6 +156,8 @@
 		// Add OrbitControls so that we can pan around with the mouse.
 		controls = new THREE.OrbitControls(camera, renderer.domElement);
 
+
+		clock = new THREE.Clock();
 		animate();
 	}
 
@@ -207,7 +212,14 @@
 		// console.log(daCube.rotation.x + ',' + daCube.rotation.y + ',' + daCube.rotation.z);
 		}
 		// console.log()
-		placeBallInRandomLocation();
+		
+		 console.log(timeElapsed);
+		 timeElapsed+=clock.getElapsedTime();
+		if (timeElapsed > 10){
+			placeBallInRandomLocation();
+			timeElapsed=0;
+		}
+
 		coll();
 
 		// index = placeBallInRandomLocation();
