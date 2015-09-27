@@ -19,20 +19,14 @@
 		scene.add(camera);
 
 		geometry = new THREE.BoxGeometry(300,300,300);
-		// material = new THREE.MeshLambertMaterial({color: 0x0000FF});
+		// material = new THREE.MeshLambertMaterial({color:0x0000FF});
 		var materials = [
-		    new THREE.MeshLambertMaterial({
-		        color:0xffa500 }),
-		    new THREE.MeshLambertMaterial({
-		        color:0xff0000 }),
-		    new THREE.MeshLambertMaterial({
-		        color:0x00ff00 }),
-		    new THREE.MeshLambertMaterial({
-		        color:0x00ccff }),
-		    new THREE.MeshLambertMaterial({
-		        color:0xcccccc }),
-		    new THREE.MeshLambertMaterial( {
-		        color:0xffff00 }),
+		    new THREE.MeshLambertMaterial({color:0xff7700}),
+		    new THREE.MeshLambertMaterial({color:0xee0000}),
+		    new THREE.MeshLambertMaterial({color:0x00ff00}),
+		    new THREE.MeshLambertMaterial({color:0x00bbee}),
+		    new THREE.MeshLambertMaterial({color:0xcccccc}),
+		    new THREE.MeshLambertMaterial({color:0xdddd00}),
 		];
 		cube = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
 		cube.rotation.x = 53.9;
@@ -45,11 +39,19 @@
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.setClearColor(0xeeeedd, 1.0);
 
-		var pointLight = new THREE.PointLight(0xFFFFFF);
-		pointLight.position.x = 10;
-		pointLight.position.y = 50;
-		pointLight.position.z = 1000;
-		scene.add(pointLight);
+		var pointLightForward = new THREE.PointLight(0xffffff, 1.07);
+		var pointLightRight = new THREE.PointLight(0xffffff, 0.24);
+		var pointLightLeft = new THREE.PointLight(0xffffff, 0.24);
+		var pointLightTop = new THREE.PointLight(0xffffff, 0.75);
+		pointLightForward.position.y = -600;
+		pointLightForward.position.z = 4500;
+		pointLightRight.position.x = 3000;
+		pointLightLeft.position.x = -3000;
+		pointLightTop.position.y = 3000;
+		scene.add(pointLightForward);
+		scene.add(pointLightRight);
+		scene.add(pointLightLeft);
+		scene.add(pointLightTop);
 
 
 		document.body.appendChild(renderer.domElement);
